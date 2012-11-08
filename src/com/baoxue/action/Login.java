@@ -77,16 +77,15 @@ public class Login extends ActionBase {
 	public String execute() {
 		if (isPost()) {
 
-			// String save_img_code = (String) ServletActionContext.getRequest()
-			// .getSession().getAttribute("login_img_code");
-			// ServletActionContext.getRequest().getSession()
-			// .setAttribute("login_img_code", null);
-			// if (save_img_code == null
-			// || !save_img_code.toLowerCase().equals(
-			// getImgCode().toLowerCase())) {
-			// setMsg(Helper.getString("img_code_error"));
-			// return LOGIN;
-			// }
+			String save_img_code = (String) getSession().getAttribute(
+					"login_img_code");
+			getRequest().getSession().setAttribute("login_img_code", null);
+			if (save_img_code == null
+					|| !save_img_code.toLowerCase().equals(
+							getImgCode().toLowerCase())) {
+				setMsg(Helper.getString("img_code_error"));
+				return LOGIN;
+			}
 
 			Session session = HibernateSessionFactory.getSession();
 			String hql = "from TUsers u where u.username=:user and u.password=:password";

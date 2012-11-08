@@ -15,7 +15,6 @@ public abstract class ActionBase extends ActionSupport {
 	 */
 	private static final long serialVersionUID = 5104992752310358012L;
 
-
 	protected HttpSession getSession() {
 
 		return ServletActionContext.getRequest().getSession();
@@ -38,6 +37,11 @@ public abstract class ActionBase extends ActionSupport {
 		} else {
 			return true;
 		}
+	}
+
+	protected String getRealPath(String url) {
+
+		return ServletActionContext.getServletContext().getRealPath(url);
 	}
 
 }

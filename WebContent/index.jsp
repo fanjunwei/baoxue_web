@@ -18,7 +18,7 @@
 
 			<div id="login-box">
 
-				<H2>暴雪后台</H2>
+				<h2>暴雪后台</h2>
 				<br /> <br />
 				<div id="login-box-name" style="margin-top: 20px;">用户名:</div>
 				<div id="login-box-field" style="margin-top: 20px;">
@@ -31,18 +31,23 @@
 						size="30" name="password" maxlength="2048" />
 				</div>
 				<div id="login-box-name">验证码:</div>
-				<div id="login-box-field" style="vertical-align:bottom;display: table;white-space:nowrap;">
+				<div id="login-box-field"
+					style="vertical-align: bottom; display: table; white-space: nowrap;">
 					<input name="imgCode" class="form-login" value="" size="25"
-						maxlength="2048" style="vertical-align:bottom;display: table-cell;" /> <img
-						style="vertical-align:bottom;display: table-cell;" src="<s:url action="imgCode" ></s:url>" />
+						maxlength="2048"
+						style="vertical-align: bottom; display: table-cell;" /> <img
+						style="vertical-align: bottom; display: table-cell;"
+						src="<s:url action="imgCode" ></s:url>" />
 				</div>
 				<br /> <br /> <br /> <a
 					href="javascript:document.form1.submit();"><img
 					src="images/login-btn.png" width="103" height="42"
 					style="margin-left: 90px;" /></a>
+					<s:label name="msg" cssStyle="color:red;"></s:label>
 			</div>
-
 		</div>
+
 	</s:form>
+
 </body>
 </html>
