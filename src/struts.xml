@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
+	<constant name="struts.multipart.maxSize" value="2000000000" />
 	<constant name="struts.ui.theme" value="simple" />
 	<constant name="struts.ui.templateDir" value="template" />
 	<constant name="struts.ui.templateSuffix" value="ftl" />
@@ -13,18 +14,29 @@
 				<interceptor-ref name="defaultStack"></interceptor-ref>
 				<interceptor-ref name="loginVerify"></interceptor-ref>
 			</interceptor-stack>
+
+			<interceptor-stack name="myupload">
+				<interceptor-ref name="fileUpload">
+					<!-- application/octet-stream -->
+					<!-- 配置允许上传的文件大小 -->
+					<param name="maximumSize">2000000000</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginVerify" />
+
+			</interceptor-stack>
 		</interceptors>
 		<default-interceptor-ref name="verify"></default-interceptor-ref>
 		<!-- 错误处理Action -->
 		<global-results>
 			<result name="error">/WEB-INF/views/error.jsp</result>
-			<result name="login">/index.jsp</result>
+			<result name="login">/login.jsp</result>
 		</global-results>
 
 		<action name="login" class="com.baoxue.action.Login" method="execute">
-			<result name="success">/WEB-INF/views/success.jsp</result>
-			<result name="login">/index.jsp</result>
-
+			<result type="redirectAction" name="success">home</result>
+			<result name="login">/login.jsp</result>
+			<result name="input">/login.jsp</result>
 		</action>
 		<action name="imgCode" class="com.baoxue.action.Login" method="imgCode">
 			<result type="stream">
@@ -33,11 +45,35 @@
 			</result>
 		</action>
 
-		<action name="weatherversion" class="com.baoxue.action.Weather" method="weatherVersion">
+		<action name="home" class="com.baoxue.action.Home" method="execute">
+			<result name="success">/WEB-INF/views/home.jsp</result>
+		</action>
+		<action name="weatherversion" class="com.baoxue.action.Weather"
+			method="weatherVersion">
 			<result type="stream">
 				<param name="contentType">text/xml</param>
 				<param name="inputName">versionXML</param>
 			</result>
 		</action>
+		<action name="uploadWeather" class="com.baoxue.action.UploadWeather"
+			method="execute">
+			<interceptor-ref name="myupload" />
+			<result name="success">/WEB-INF/views/uploadWeather.jsp</result>
+			<result name="input">/WEB-INF/views/uploadWeather.jsp</result>
+		</action>
+		<action name="upload_package" class="com.baoxue.action.UploadPackage"
+			method="execute">
+			<interceptor-ref name="myupload" />
+			<result name="success">/WEB-INF/views/upload_package.jsp</result>
+			<result name="input">/WEB-INF/views/upload_package.jsp</result>
+		</action>
+
+		<action name="manage_package" class="com.baoxue.action.ManagePackage">
+			<result name="success">/WEB-INF/views/manage_package.jsp</result>
+			<result name="input">/WEB-INF/views/manage_package.jsp</result>
+			<result name="edit">/WEB-INF/views/edit_package.jsp</result>
+		</action>
 	</package>
+
+	<include file="device_service.xml"></include>
 </struts>    

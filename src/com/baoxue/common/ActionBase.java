@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
+import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -44,4 +45,15 @@ public abstract class ActionBase extends ActionSupport {
 		return ServletActionContext.getServletContext().getRealPath(url);
 	}
 
+	protected Session getDBSession() {
+		return HibernateSessionFactory.getSession();
+	}
+	
+	protected String getBaseUrl()
+	{
+		String baseurl = getRequest().getScheme() + "://"
+				+ getRequest().getServerName() + ":"
+				+ getRequest().getServerPort() + getRequest().getContextPath();
+		return baseurl;
+	}
 }

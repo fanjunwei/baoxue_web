@@ -7,13 +7,18 @@
         <property name="hibernate.connection.characterEncoding">utf8</property>
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
         <property name="hibernate.connection.password">baoxuetech</property>
-        <property name="hibernate.connection.url">jdbc:mysql://192.168.1.4:3306/baoxue</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/baoxue</property>
         <property name="hibernate.connection.useUnicode">true</property>
         <property name="hibernate.connection.username">baoxue</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLInnoDBDialect</property>
         <property name="hibernate.myeclipse.connection.profile">baoxue</property>
         <property name="hibernate.search.autoregister_listeners">false</property>
         <property name="hibernate.show_sql">true</property>
+        <mapping class="com.baoxue.db.TDoPackageUpdateLog" />
+        <mapping class="com.baoxue.db.TPackageUpdate" />
         <mapping class="com.baoxue.db.TUsers" />
+        <mapping class="com.baoxue.db.TTaskItem" />
+        <mapping class="com.baoxue.db.TDoTaskLog" />
+        <mapping class="com.baoxue.db.TTask" />
     </session-factory>
 </hibernate-configuration>

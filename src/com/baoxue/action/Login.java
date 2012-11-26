@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.omg.CORBA.Principal;
 
 import com.baoxue.annotation.CheckLogin;
 import com.baoxue.common.ActionBase;
@@ -37,10 +36,29 @@ public class Login extends ActionBase {
 	private String password;
 	private String imgCode;
 	private String msg;
+	// private File file;
+	// private String fileContentType;
+	// private String fileFileName;
 	private static final char[] IMG_CODE_CHAR = new char[] { 'A', 'B', 'C',
 			'D', 'E', 'F', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R',
 			'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '2', '3', '4', '5', '6',
 			'7', '8', '9' };
+
+	// public String getFileFileName() {
+	// return fileFileName;
+	// }
+	//
+	// public void setFileFileName(String fileFileName) {
+	// this.fileFileName = fileFileName;
+	// }
+	//
+	// public File getFile() {
+	// return file;
+	// }
+	//
+	// public void setFile(File file) {
+	// this.file = file;
+	// }
 
 	public String getUserName() {
 		return userName;
@@ -75,6 +93,11 @@ public class Login extends ActionBase {
 	}
 
 	public String execute() {
+		int LOGIN_TYPE = getSession().getAttribute("LOGIN_TYPE") == null ? 0
+				: (Integer) getSession().getAttribute("LOGIN_TYPE");
+		if (LOGIN_TYPE == 1) {
+			return SUCCESS;
+		}
 		if (isPost()) {
 
 			String save_img_code = (String) getSession().getAttribute(
@@ -102,6 +125,7 @@ public class Login extends ActionBase {
 				if (res.size() > 0) {
 					TUsers user = (TUsers) res.get(0);
 					if (user.getAdminid() == 1) {
+						getSession().setAttribute("LOGIN_TYPE", 1);
 						return SUCCESS;
 					} else {
 						setMsg(Helper.getString("not_admin"));
@@ -119,6 +143,14 @@ public class Login extends ActionBase {
 			setPassword("");
 
 			setMsg(Helper.getString("login_faile"));
+
+			// try {
+			// FileInputStream input = new FileInputStream(f1);
+			//
+			// } catch (FileNotFoundException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
+			// }
 
 		}
 		return LOGIN;

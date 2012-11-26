@@ -10,6 +10,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.struts2.ServletActionContext;
+
 import com.baoxue.annotation.CheckLogin;
 import com.baoxue.common.ActionBase;
 
@@ -31,13 +33,8 @@ public class Weather extends ActionBase {
 				+ getRequest().getServerPort() + getRequest().getContextPath();
 		System.out.println(baseurl);
 
-		String aapt = getRealPath("/tools/aapt");
-		System.out.println(aapt);
-
-		String apk = getRealPath("/apk/weather.apk");
-		System.out.println(apk);
 		String apkurl = baseurl + "/apk/weather.apk";
-		String version = getVersion(aapt, apk);
+		String version = getVersion(getAaptPath(), getApkPath());
 		String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 		xml += "<Version>\n";
 		xml += "<Url>" + apkurl + "</Url>\n";
@@ -59,7 +56,19 @@ public class Weather extends ActionBase {
 		}
 	}
 
-	private String getVersion(String aapt, String apk) {
+	public static String getApkPath() {
+		String apk = ServletActionContext.getServletContext().getRealPath(
+				"/apk/weather.apk");
+		return apk;
+	}
+
+	public static String getAaptPath() {
+		String path = ServletActionContext.getServletContext().getRealPath(
+				"/tools/aapt");
+		return path;
+	}
+
+	public static String getVersion(String aapt, String apk) {
 
 		System.out.println("getVersion");
 		File f1 = new File(aapt);
@@ -76,11 +85,17 @@ public class Weather extends ActionBase {
 				String str = null;
 				BufferedReader stdin = new BufferedReader(
 						new InputStreamReader(pros.getInputStream()));
+
+				BufferedReader stderr = new BufferedReader(
+						new InputStreamReader(pros.getErrorStream()));
 				// while ((str = stdin.readLine()) != null) {
 				// sb.append(str + "\n");
 				// }
 				// System.out.println(sb.toString());
 				// versionName='1.4'
+				while ((str = stderr.readLine()) != null) {
+					System.out.println(str);
+				}
 				if ((str = stdin.readLine()) != null) {
 					System.out.println("line1=" + str);
 					System.out.println(str.toString());
