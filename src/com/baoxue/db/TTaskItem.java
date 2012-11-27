@@ -1,6 +1,6 @@
 package com.baoxue.db;
 
-// Generated 2012-11-19 12:57:06 by Hibernate Tools 3.4.0.CR1
+// Generated 2012-11-27 15:58:36 by Hibernate Tools 3.4.0.CR1
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -14,145 +14,145 @@ import javax.persistence.Table;
 @Table(name = "T_TASK_ITEM", catalog = "baoxue")
 public class TTaskItem implements java.io.Serializable {
 
-	private String id;
-	private String taskId;
-	private String name;
-	private String command;
-	private String p1;
-	private String p2;
-	private String p3;
-	private String p4;
-	private String p5;
-	private int index;
-	private boolean necessary;
+	private String CId;
+	private String CTaskId;
+	private String CDescription;
+	private String CCommand;
+	private String CP1;
+	private String CP2;
+	private String CP3;
+	private String CP4;
+	private String CP5;
+	private int CIndex;
+	private boolean CEnable;
 
 	public TTaskItem() {
 	}
 
-	public TTaskItem(String id, String taskId, String name, String command,
-			int index, boolean necessary) {
-		this.id = id;
-		this.taskId = taskId;
-		this.name = name;
-		this.command = command;
-		this.index = index;
-		this.necessary = necessary;
+	public TTaskItem(String CId, String CTaskId, String CDescription,
+			String CCommand, int CIndex, boolean CEnable) {
+		this.CId = CId;
+		this.CTaskId = CTaskId;
+		this.CDescription = CDescription;
+		this.CCommand = CCommand;
+		this.CIndex = CIndex;
+		this.CEnable = CEnable;
 	}
 
-	public TTaskItem(String id, String taskId, String name, String command,
-			String p1, String p2, String p3, String p4, String p5, int index,
-			boolean necessary) {
-		this.id = id;
-		this.taskId = taskId;
-		this.name = name;
-		this.command = command;
-		this.p1 = p1;
-		this.p2 = p2;
-		this.p3 = p3;
-		this.p4 = p4;
-		this.p5 = p5;
-		this.index = index;
-		this.necessary = necessary;
+	public TTaskItem(String CId, String CTaskId, String CDescription,
+			String CCommand, String CP1, String CP2, String CP3, String CP4,
+			String CP5, int CIndex, boolean CEnable) {
+		this.CId = CId;
+		this.CTaskId = CTaskId;
+		this.CDescription = CDescription;
+		this.CCommand = CCommand;
+		this.CP1 = CP1;
+		this.CP2 = CP2;
+		this.CP3 = CP3;
+		this.CP4 = CP4;
+		this.CP5 = CP5;
+		this.CIndex = CIndex;
+		this.CEnable = CEnable;
 	}
 
 	@Id
-	@Column(name = "ID", unique = true, nullable = false, length = 36)
-	public String getId() {
-		return this.id;
+	@Column(name = "C_ID", unique = true, nullable = false, length = 36)
+	public String getCId() {
+		return this.CId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setCId(String CId) {
+		this.CId = CId;
 	}
 
-	@Column(name = "TASK_ID", nullable = false, length = 36)
-	public String getTaskId() {
-		return this.taskId;
+	@Column(name = "C_TASK_ID", nullable = false, length = 36)
+	public String getCTaskId() {
+		return this.CTaskId;
 	}
 
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
+	public void setCTaskId(String CTaskId) {
+		this.CTaskId = CTaskId;
 	}
 
-	@Column(name = "NAME", nullable = false)
-	public String getName() {
-		return this.name;
+	@Column(name = "C_DESCRIPTION", nullable = false)
+	public String getCDescription() {
+		return this.CDescription;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCDescription(String CDescription) {
+		this.CDescription = CDescription;
 	}
 
-	@Column(name = "COMMAND", nullable = false, length = 50)
-	public String getCommand() {
-		return this.command;
+	@Column(name = "C_COMMAND", nullable = false, length = 50)
+	public String getCCommand() {
+		return this.CCommand;
 	}
 
-	public void setCommand(String command) {
-		this.command = command;
+	public void setCCommand(String CCommand) {
+		this.CCommand = CCommand;
 	}
 
-	@Column(name = "P1", length = 200)
-	public String getP1() {
-		return this.p1;
+	@Column(name = "C_P1", length = 200)
+	public String getCP1() {
+		return this.CP1;
 	}
 
-	public void setP1(String p1) {
-		this.p1 = p1;
+	public void setCP1(String CP1) {
+		this.CP1 = CP1;
 	}
 
-	@Column(name = "P2", length = 200)
-	public String getP2() {
-		return this.p2;
+	@Column(name = "C_P2", length = 200)
+	public String getCP2() {
+		return this.CP2;
 	}
 
-	public void setP2(String p2) {
-		this.p2 = p2;
+	public void setCP2(String CP2) {
+		this.CP2 = CP2;
 	}
 
-	@Column(name = "P3", length = 200)
-	public String getP3() {
-		return this.p3;
+	@Column(name = "C_P3", length = 200)
+	public String getCP3() {
+		return this.CP3;
 	}
 
-	public void setP3(String p3) {
-		this.p3 = p3;
+	public void setCP3(String CP3) {
+		this.CP3 = CP3;
 	}
 
-	@Column(name = "P4", length = 200)
-	public String getP4() {
-		return this.p4;
+	@Column(name = "C_P4", length = 200)
+	public String getCP4() {
+		return this.CP4;
 	}
 
-	public void setP4(String p4) {
-		this.p4 = p4;
+	public void setCP4(String CP4) {
+		this.CP4 = CP4;
 	}
 
-	@Column(name = "P5", length = 200)
-	public String getP5() {
-		return this.p5;
+	@Column(name = "C_P5", length = 200)
+	public String getCP5() {
+		return this.CP5;
 	}
 
-	public void setP5(String p5) {
-		this.p5 = p5;
+	public void setCP5(String CP5) {
+		this.CP5 = CP5;
 	}
 
-	@Column(name = "INDEX", nullable = false)
-	public int getIndex() {
-		return this.index;
+	@Column(name = "C_INDEX", nullable = false)
+	public int getCIndex() {
+		return this.CIndex;
 	}
 
-	public void setIndex(int index) {
-		this.index = index;
+	public void setCIndex(int CIndex) {
+		this.CIndex = CIndex;
 	}
 
-	@Column(name = "NECESSARY", nullable = false)
-	public boolean isNecessary() {
-		return this.necessary;
+	@Column(name = "C_ENABLE", nullable = false)
+	public boolean isCEnable() {
+		return this.CEnable;
 	}
 
-	public void setNecessary(boolean necessary) {
-		this.necessary = necessary;
+	public void setCEnable(boolean CEnable) {
+		this.CEnable = CEnable;
 	}
 
 }

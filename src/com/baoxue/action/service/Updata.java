@@ -70,7 +70,7 @@ public class Updata extends ServiceBase {
 		Query query = session.createQuery(hql);
 		List<TPackageUpdate> res = query.list();
 		for (TPackageUpdate pu : res) {
-			appMaps.put(pu.getPackageName(), pu);
+			appMaps.put(pu.getCPackageName(), pu);
 		}
 		updatePackageNames.clear();
 		updatePackageUrls.clear();
@@ -80,19 +80,19 @@ public class Updata extends ServiceBase {
 			TPackageUpdate find = null;
 			if ((find = appMaps.get(pn)) != null) {
 				int code = versionCodes.get(i);
-				if (find.getVersionCode() > code) {
-					updatePackageNames.add(find.getPackageName());
+				if (find.getCVersionCode() > code) {
+					updatePackageNames.add(find.getCPackageName());
 					updatePackageUrls.add(getBaseUrl() + "/apk/"
-							+ find.getFileName());
-					forcesUpdates.add(find.isForcesUpdate());
+							+ find.getCFileName());
+					forcesUpdates.add(find.isCForcesUpdate());
 				}
 			}
 		}
 
 		for (TPackageUpdate find : res) {
-			updatePackageNames.add(find.getPackageName());
-			updatePackageUrls.add(getBaseUrl() + "/apk/" + find.getFileName());
-			forcesUpdates.add(find.isForcesUpdate());
+			updatePackageNames.add(find.getCPackageName());
+			updatePackageUrls.add(getBaseUrl() + "/apk/" + find.getCFileName());
+			forcesUpdates.add(find.isCForcesUpdate());
 		}
 		return SUCCESS;
 	}

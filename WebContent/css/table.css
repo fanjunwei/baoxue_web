@@ -29,12 +29,17 @@ h1,h2,h3 {
 }
 
 .title h1 {
+	font-size: 20px;
 	line-height: 31px;
 	text-align: center;
 	background: #2F589C url(th_bg2.gif);
 	background-repeat: repeat-x;
 	background-position: 0 0;
 	color: #FFF;
+}
+
+.title h2 {
+	text-align: center;
 }
 
 .title th,.title td {
@@ -61,4 +66,8 @@ table.t1 td,table.t1 th {
 
 table.t1 tr.a1 {
 	background-color: #f5fafe;
+}
+
+table.t1 tr.selected {
+	background-color: #008dfe;
 }

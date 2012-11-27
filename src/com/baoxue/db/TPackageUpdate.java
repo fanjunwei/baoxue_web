@@ -1,6 +1,6 @@
 package com.baoxue.db;
 
-// Generated 2012-11-19 12:57:06 by Hibernate Tools 3.4.0.CR1
+// Generated 2012-11-27 15:58:36 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -17,127 +17,128 @@ import javax.persistence.TemporalType;
 @Table(name = "T_PACKAGE_UPDATE", catalog = "baoxue")
 public class TPackageUpdate implements java.io.Serializable {
 
-	private String id;
-	private String packageName;
-	private String oldPackageName;
-	private String fileName;
-	private int versionCode;
-	private String versionName;
-	private Date uploadTime;
-	private boolean publish;
-	private boolean forcesUpdate;
+	private String CId;
+	private String CPackageName;
+	private String COldPackageName;
+	private String CFileName;
+	private int CVersionCode;
+	private String CVersionName;
+	private Date CUploadTime;
+	private boolean CPublish;
+	private boolean CForcesUpdate;
 
 	public TPackageUpdate() {
 	}
 
-	public TPackageUpdate(String id, String packageName, String fileName,
-			int versionCode, String versionName, Date uploadTime,
-			boolean publish, boolean forcesUpdate) {
-		this.id = id;
-		this.packageName = packageName;
-		this.fileName = fileName;
-		this.versionCode = versionCode;
-		this.versionName = versionName;
-		this.uploadTime = uploadTime;
-		this.publish = publish;
-		this.forcesUpdate = forcesUpdate;
+	public TPackageUpdate(String CId, String CPackageName, String CFileName,
+			int CVersionCode, String CVersionName, Date CUploadTime,
+			boolean CPublish, boolean CForcesUpdate) {
+		this.CId = CId;
+		this.CPackageName = CPackageName;
+		this.CFileName = CFileName;
+		this.CVersionCode = CVersionCode;
+		this.CVersionName = CVersionName;
+		this.CUploadTime = CUploadTime;
+		this.CPublish = CPublish;
+		this.CForcesUpdate = CForcesUpdate;
 	}
 
-	public TPackageUpdate(String id, String packageName, String oldPackageName,
-			String fileName, int versionCode, String versionName,
-			Date uploadTime, boolean publish, boolean forcesUpdate) {
-		this.id = id;
-		this.packageName = packageName;
-		this.oldPackageName = oldPackageName;
-		this.fileName = fileName;
-		this.versionCode = versionCode;
-		this.versionName = versionName;
-		this.uploadTime = uploadTime;
-		this.publish = publish;
-		this.forcesUpdate = forcesUpdate;
+	public TPackageUpdate(String CId, String CPackageName,
+			String COldPackageName, String CFileName, int CVersionCode,
+			String CVersionName, Date CUploadTime, boolean CPublish,
+			boolean CForcesUpdate) {
+		this.CId = CId;
+		this.CPackageName = CPackageName;
+		this.COldPackageName = COldPackageName;
+		this.CFileName = CFileName;
+		this.CVersionCode = CVersionCode;
+		this.CVersionName = CVersionName;
+		this.CUploadTime = CUploadTime;
+		this.CPublish = CPublish;
+		this.CForcesUpdate = CForcesUpdate;
 	}
 
 	@Id
-	@Column(name = "ID", unique = true, nullable = false, length = 36)
-	public String getId() {
-		return this.id;
+	@Column(name = "C_ID", unique = true, nullable = false, length = 36)
+	public String getCId() {
+		return this.CId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setCId(String CId) {
+		this.CId = CId;
 	}
 
-	@Column(name = "PACKAGE_NAME", nullable = false, length = 100)
-	public String getPackageName() {
-		return this.packageName;
+	@Column(name = "C_PACKAGE_NAME", nullable = false, length = 100)
+	public String getCPackageName() {
+		return this.CPackageName;
 	}
 
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+	public void setCPackageName(String CPackageName) {
+		this.CPackageName = CPackageName;
 	}
 
-	@Column(name = "OLD_PACKAGE_NAME", length = 100)
-	public String getOldPackageName() {
-		return this.oldPackageName;
+	@Column(name = "C_OLD_PACKAGE_NAME", length = 100)
+	public String getCOldPackageName() {
+		return this.COldPackageName;
 	}
 
-	public void setOldPackageName(String oldPackageName) {
-		this.oldPackageName = oldPackageName;
+	public void setCOldPackageName(String COldPackageName) {
+		this.COldPackageName = COldPackageName;
 	}
 
-	@Column(name = "FILE_NAME", nullable = false, length = 50)
-	public String getFileName() {
-		return this.fileName;
+	@Column(name = "C_FILE_NAME", nullable = false, length = 50)
+	public String getCFileName() {
+		return this.CFileName;
 	}
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
+	public void setCFileName(String CFileName) {
+		this.CFileName = CFileName;
 	}
 
-	@Column(name = "VERSION_CODE", nullable = false)
-	public int getVersionCode() {
-		return this.versionCode;
+	@Column(name = "C_VERSION_CODE", nullable = false)
+	public int getCVersionCode() {
+		return this.CVersionCode;
 	}
 
-	public void setVersionCode(int versionCode) {
-		this.versionCode = versionCode;
+	public void setCVersionCode(int CVersionCode) {
+		this.CVersionCode = CVersionCode;
 	}
 
-	@Column(name = "VERSION_NAME", nullable = false, length = 45)
-	public String getVersionName() {
-		return this.versionName;
+	@Column(name = "C_VERSION_NAME", nullable = false, length = 45)
+	public String getCVersionName() {
+		return this.CVersionName;
 	}
 
-	public void setVersionName(String versionName) {
-		this.versionName = versionName;
+	public void setCVersionName(String CVersionName) {
+		this.CVersionName = CVersionName;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "UPLOAD_TIME", nullable = false, length = 19)
-	public Date getUploadTime() {
-		return this.uploadTime;
+	@Column(name = "C_UPLOAD_TIME", nullable = false, length = 19)
+	public Date getCUploadTime() {
+		return this.CUploadTime;
 	}
 
-	public void setUploadTime(Date uploadTime) {
-		this.uploadTime = uploadTime;
+	public void setCUploadTime(Date CUploadTime) {
+		this.CUploadTime = CUploadTime;
 	}
 
-	@Column(name = "PUBLISH", nullable = false)
-	public boolean isPublish() {
-		return this.publish;
+	@Column(name = "C_PUBLISH", nullable = false)
+	public boolean isCPublish() {
+		return this.CPublish;
 	}
 
-	public void setPublish(boolean publish) {
-		this.publish = publish;
+	public void setCPublish(boolean CPublish) {
+		this.CPublish = CPublish;
 	}
 
-	@Column(name = "FORCES_UPDATE", nullable = false)
-	public boolean isForcesUpdate() {
-		return this.forcesUpdate;
+	@Column(name = "C_FORCES_UPDATE", nullable = false)
+	public boolean isCForcesUpdate() {
+		return this.CForcesUpdate;
 	}
 
-	public void setForcesUpdate(boolean forcesUpdate) {
-		this.forcesUpdate = forcesUpdate;
+	public void setCForcesUpdate(boolean CForcesUpdate) {
+		this.CForcesUpdate = CForcesUpdate;
 	}
 
 }

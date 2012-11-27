@@ -84,11 +84,15 @@ body
 	-moz-transition: box-shadow .1s linear;
 }
 
-.box .title {
+.box .box_title {
 	text-align: center;
 	margin: 0 auto;
 }
 
+.box .box_title h1 {
+	line-height: 31px;
+	font-size: 15px;
+}
 .box .alias {
 	width: 174px;
 	padding-right: 125px;

@@ -73,6 +73,11 @@
 			<result name="input">/WEB-INF/views/manage_package.jsp</result>
 			<result name="edit">/WEB-INF/views/edit_package.jsp</result>
 		</action>
+
+		<action name="task" class="com.baoxue.action.Task">
+			<result name="task">/WEB-INF/views/manage_task.jsp</result>
+			<result name="item">/WEB-INF/views/manage_task_item.jsp</result>
+		</action>
 	</package>
 
 	<include file="device_service.xml"></include>

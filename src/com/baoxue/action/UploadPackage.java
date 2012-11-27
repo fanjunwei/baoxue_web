@@ -26,10 +26,10 @@ public class UploadPackage extends ActionBase {
 
 	private boolean showMsg;
 	private String msgTitle;
+	private List<String> msgItem = new ArrayList<String>();
 
 	private boolean showDelete;
 	private String id;
-	private List<String> msgItem = new ArrayList<String>();
 
 	public String getOldPackageName() {
 		return oldPackageName;
@@ -140,23 +140,23 @@ public class UploadPackage extends ActionBase {
 					Session session = getDBSession();
 					Transaction tx = session.beginTransaction();
 					TPackageUpdate pu = new TPackageUpdate();
-					pu.setId(UUID.randomUUID().toString());
-					pu.setFileName(fileName);
-					pu.setForcesUpdate(forces);
+					pu.setCId(UUID.randomUUID().toString());
+					pu.setCFileName(fileName);
+					pu.setCForcesUpdate(forces);
 					if (oldPackageName != null && "".equals(oldPackageName)) {
-						pu.setOldPackageName(oldPackageName);
+						pu.setCOldPackageName(oldPackageName);
 					}
-					pu.setPublish(publish);
-					pu.setPackageName(info.getPackageName());
-					pu.setUploadTime(new Date());
-					pu.setVersionCode(info.getVersionCode());
-					pu.setVersionName(info.getVersionName());
+					pu.setCPublish(publish);
+					pu.setCPackageName(info.getPackageName());
+					pu.setCUploadTime(new Date());
+					pu.setCVersionCode(info.getVersionCode());
+					pu.setCVersionName(info.getVersionName());
 
 					session.save(pu);
 					tx.commit();
 					setShowMsg(true);
 					setMsgTitle("上传成功");
-					setId(pu.getId());
+					setId(pu.getCId());
 					setShowDelete(true);
 					msgItem.add("文件大小:" + Helper.formatLength(file.length()));
 					msgItem.add("packageName:" + info.getPackageName());
@@ -182,13 +182,13 @@ public class UploadPackage extends ActionBase {
 		setShowDelete(false);
 		Session session = getDBSession();
 		Transaction tx = session.beginTransaction();
-		String hql = "from TPackageUpdate p where p.id=:id";
+		String hql = "from TPackageUpdate p where p.CId=:id";
 		Query query = session.createQuery(hql);
 		query.setParameter("id", id);
 		@SuppressWarnings("unchecked")
 		List<TPackageUpdate> res = query.list();
-		if (res.size() > 0) {
-			String fileName = res.get(0).getFileName();
+		if (res != null && res.size() > 0) {
+			String fileName = res.get(0).getCFileName();
 			String fullName = getRealPath("/apk/" + fileName);
 			File file = new File(fullName);
 			if (file.delete()) {

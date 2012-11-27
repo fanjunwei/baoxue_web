@@ -1,6 +1,6 @@
 package com.baoxue.db;
 
-// Generated 2012-11-19 12:57:06 by Hibernate Tools 3.4.0.CR1
+// Generated 2012-11-27 15:58:36 by Hibernate Tools 3.4.0.CR1
 
 import java.math.BigDecimal;
 import java.util.Date;

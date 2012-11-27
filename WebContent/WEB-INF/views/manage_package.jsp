@@ -32,10 +32,10 @@
 		</thead>
 		<s:iterator value="packages" id="p" status="st">
 			<s:url id="del" action="manage_package" method="delete">
-				<s:param name="id" value="#p.id"></s:param>
+				<s:param name="id" value="#p.CId"></s:param>
 			</s:url>
 			<s:url id="edit" action="manage_package" method="edit">
-				<s:param name="id" value="#p.id"></s:param>
+				<s:param name="id" value="#p.CId"></s:param>
 			</s:url>
 			<s:if test="#st.Even">
 				<tr >
@@ -43,13 +43,13 @@
 			<s:else>
 				<tr class="a1">
 			</s:else>
-			<td><s:property value="packageName" /></td>
-			<td><s:property value="versionCode" /></td>
-			<td><s:property value="versionName" /></td>
-			<td><s:property value="oldPackageName" /></td>
-			<td><s:property value="uploadTime" /></td>
-			<td><s:property value="publish" /></td>
-			<td><s:property value="forcesUpdate" /></td>
+			<td><s:property value="CPackageName" /></td>
+			<td><s:property value="CVersionCode" /></td>
+			<td><s:property value="CVersionName" /></td>
+			<td><s:property value="COldPackageName" /></td>
+			<td><s:property value="CUploadTime" /></td>
+			<td><s:property value="CPublish" /></td>
+			<td><s:property value="CForcesUpdate" /></td>
 			<td><s:a href="%{del}">删除</s:a> <s:a href="%{edit}">编辑</s:a></td>
 			</tr>
 
@@ -62,10 +62,24 @@
 	<br />
 	<br />
 	<s:if test="showMsg">
-		<div class="msg">
-			<p>
-				<s:property value="msgTitle" />
-			</p>
-		</div>
+		<s:form action="upload_package!delete">
+			<s:hidden name="id"></s:hidden>
+			<div class="msg">
+				<p>
+					<s:property value="msgTitle" />
+				</p>
+				<ul>
+					<s:iterator value="msgItem">
+						<li><s:property /></li>
+					</s:iterator>
+				</ul>
+				<s:if test="showDelete">
+			
+					<input type="submit" class="button" style="background: #f68b44; color:white;" value="删除" />
+				
+				<br/>
+				</s:if>
+			</div>
+		</s:form>
 	</s:if>
 </body>

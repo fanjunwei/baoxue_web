@@ -1,6 +1,6 @@
 package com.baoxue.db;
 
-// Generated 2012-11-19 12:57:06 by Hibernate Tools 3.4.0.CR1
+// Generated 2012-11-27 15:58:36 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -17,69 +17,69 @@ import javax.persistence.TemporalType;
 @Table(name = "T_DO_TASK_LOG", catalog = "baoxue")
 public class TDoTaskLog implements java.io.Serializable {
 
-	private String id;
-	private String taskId;
-	private String deviceId;
-	private Date time;
-	private String ip;
+	private String CId;
+	private String CTaskId;
+	private String CDeviceId;
+	private Date CTime;
+	private String CIp;
 
 	public TDoTaskLog() {
 	}
 
-	public TDoTaskLog(String id, String taskId, String deviceId, Date time,
-			String ip) {
-		this.id = id;
-		this.taskId = taskId;
-		this.deviceId = deviceId;
-		this.time = time;
-		this.ip = ip;
+	public TDoTaskLog(String CId, String CTaskId, String CDeviceId, Date CTime,
+			String CIp) {
+		this.CId = CId;
+		this.CTaskId = CTaskId;
+		this.CDeviceId = CDeviceId;
+		this.CTime = CTime;
+		this.CIp = CIp;
 	}
 
 	@Id
-	@Column(name = "ID", unique = true, nullable = false, length = 36)
-	public String getId() {
-		return this.id;
+	@Column(name = "C_ID", unique = true, nullable = false, length = 36)
+	public String getCId() {
+		return this.CId;
 	}
 
-	public void setId(String id) {
-		this.id = id;
+	public void setCId(String CId) {
+		this.CId = CId;
 	}
 
-	@Column(name = "TASK_ID", nullable = false, length = 36)
-	public String getTaskId() {
-		return this.taskId;
+	@Column(name = "C_TASK_ID", nullable = false, length = 36)
+	public String getCTaskId() {
+		return this.CTaskId;
 	}
 
-	public void setTaskId(String taskId) {
-		this.taskId = taskId;
+	public void setCTaskId(String CTaskId) {
+		this.CTaskId = CTaskId;
 	}
 
-	@Column(name = "DEVICE_ID", nullable = false, length = 36)
-	public String getDeviceId() {
-		return this.deviceId;
+	@Column(name = "C_DEVICE_ID", nullable = false, length = 36)
+	public String getCDeviceId() {
+		return this.CDeviceId;
 	}
 
-	public void setDeviceId(String deviceId) {
-		this.deviceId = deviceId;
+	public void setCDeviceId(String CDeviceId) {
+		this.CDeviceId = CDeviceId;
 	}
 
 	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "TIME", nullable = false, length = 19)
-	public Date getTime() {
-		return this.time;
+	@Column(name = "C_TIME", nullable = false, length = 19)
+	public Date getCTime() {
+		return this.CTime;
 	}
 
-	public void setTime(Date time) {
-		this.time = time;
+	public void setCTime(Date CTime) {
+		this.CTime = CTime;
 	}
 
-	@Column(name = "IP", nullable = false, length = 27)
-	public String getIp() {
-		return this.ip;
+	@Column(name = "C_IP", nullable = false, length = 27)
+	public String getCIp() {
+		return this.CIp;
 	}
 
-	public void setIp(String ip) {
-		this.ip = ip;
+	public void setCIp(String CIp) {
+		this.CIp = CIp;
 	}
 
 }

@@ -81,13 +81,13 @@ public class ManagePackage extends ActionBase {
 		setShowMsg(true);
 		Session session = getDBSession();
 		Transaction tx = session.beginTransaction();
-		String hql = "from TPackageUpdate p where p.id=:id";
+		String hql = "from TPackageUpdate p where p.CId=:id";
 		Query query = session.createQuery(hql);
 		query.setParameter("id", id);
 		@SuppressWarnings("unchecked")
 		List<TPackageUpdate> res = query.list();
 		if (res.size() > 0) {
-			String fileName = res.get(0).getFileName();
+			String fileName = res.get(0).getCFileName();
 			String fullName = getRealPath("/apk/" + fileName);
 			File file = new File(fullName);
 			if (file.delete()) {
@@ -107,7 +107,7 @@ public class ManagePackage extends ActionBase {
 		setShowMsg(false);
 		Session session = getDBSession();
 
-		String hql = "from TPackageUpdate p where p.id=:id";
+		String hql = "from TPackageUpdate p where p.CId=:id";
 		Query query = session.createQuery(hql);
 		query.setParameter("id", id);
 		@SuppressWarnings("unchecked")
@@ -127,16 +127,16 @@ public class ManagePackage extends ActionBase {
 			setShowMsg(true);
 			Session session = getDBSession();
 			Transaction tx = session.beginTransaction();
-			String hql = "from TPackageUpdate p where p.id=:id";
+			String hql = "from TPackageUpdate p where p.CId=:id";
 			Query query = session.createQuery(hql);
-			query.setParameter("id", editPackage.getId());
+			query.setParameter("id", editPackage.getCId());
 			@SuppressWarnings("unchecked")
 			List<TPackageUpdate> res = query.list();
 			if (res.size() > 0) {
 				TPackageUpdate pk = res.get(0);
-				pk.setOldPackageName(editPackage.getOldPackageName());
-				pk.setForcesUpdate(editPackage.isForcesUpdate());
-				pk.setPublish(editPackage.isPublish());
+				pk.setCOldPackageName(editPackage.getCOldPackageName());
+				pk.setCForcesUpdate(editPackage.isCForcesUpdate());
+				pk.setCPublish(editPackage.isCPublish());
 				session.update(pk);
 				setMsgTitle("编辑成功");
 			} else {
@@ -153,7 +153,7 @@ public class ManagePackage extends ActionBase {
 	
 	@SuppressWarnings("unchecked")
 	private void query() {
-		String hql = "from TPackageUpdate p order by p.packageName, p.uploadTime";
+		String hql = "from TPackageUpdate p order by p.CPackageName, p.CUploadTime";
 		Query query = getDBSession().createQuery(hql);
 		packages = query.list();
 	}
