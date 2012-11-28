@@ -41,7 +41,7 @@ body
 
 .box {
 	z-index: 11;
-	width:80%;
+	width:20cm;
 	margin: 0 auto;
 	padding: 20px;
 	border: 1px solid #ACC3E4;
@@ -105,8 +105,9 @@ body
 }
 
 .box .bottom {
-	float: right;
-	padding-right: 50px;
+	padding: 1px;
+	margin: 20px auto;
+	text-align: center;
 }
 
 .button

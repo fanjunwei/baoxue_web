@@ -270,6 +270,11 @@ public class Task extends ActionBase {
 
 	}
 
+	public String taskEditItem() throws Exception {
+		queryItem();
+		return "item";
+	}
+
 	private void deleteItem(Session session, Transaction tx, String id)
 			throws Exception {
 		TTaskItem item = queryItemById(id);

@@ -19,18 +19,18 @@
 		<div class="title">
 			<h1>任务管理</h1>
 		</div>
-	<s:if test="showMsg">
-		<div class="msg">
-			<p>
-				<s:property value="msgTitle" />
-			</p>
-			<ul>
-				<s:iterator value="msgItem">
-					<li><s:property /></li>
-				</s:iterator>
-			</ul>
-		</div>
-	</s:if>
+		<s:if test="showMsg">
+			<div class="msg">
+				<p>
+					<s:property value="msgTitle" />
+				</p>
+				<ul>
+					<s:iterator value="msgItem">
+						<li><s:property /></li>
+					</s:iterator>
+				</ul>
+			</div>
+		</s:if>
 		<table id="mytab" border="1" class="t1">
 			<thead>
 				<tr>
@@ -84,10 +84,11 @@
 					<s:checkbox name="publish"></s:checkbox>
 					<span>发布</span>
 				</div>
+
 				<div class="bottom">
 					<s:submit method="taskAdd" value="添加" cssClass="button"></s:submit>
 				</div>
-				<br /> <br /> <br />
+				<br />
 
 			</div>
 			<br />
@@ -99,15 +100,22 @@
 					<h1>修改任务</h1>
 				</div>
 				<div class="line">
-					<span class="label">任务名称</span> <s:textfield name="taskName" cssClass="txt"></s:textfield>
+					<span class="label">任务名称</span>
+					<s:textfield name="taskName" cssClass="txt"></s:textfield>
 				</div>
 				<div class="line">
-					<span class="label">匹配表达式</span> 
+					<span class="label">匹配表达式</span>
 					<s:textfield name="versionRegex" cssClass="txt"></s:textfield>
 				</div>
 				<div class="line">
 					<s:checkbox name="publish"></s:checkbox>
 					<span>发布</span>
+				</div>
+				<div class="line">
+					<s:url id="editItem" action="task" method="taskEditItem">
+						<s:param name="taskID" value="taskID"></s:param>
+					</s:url>
+					<s:a href="%{editItem}">修改项目</s:a>
 				</div>
 				<div class="bottom">
 					<s:submit method="taskEditOk" value="确定" cssClass="button"></s:submit>

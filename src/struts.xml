@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
 <struts>
+	<bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest"
+		name="requestParser" class="com.baoxue.common.MultiPartProcessRequest"
+		scope="default" optional="true" />
+	 <constant name="struts.multipart.handler" value="requestParser" />
 	<constant name="struts.multipart.maxSize" value="2000000000" />
 	<constant name="struts.ui.theme" value="simple" />
 	<constant name="struts.ui.templateDir" value="template" />
