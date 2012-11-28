@@ -20,5 +20,6 @@
         <mapping class="com.baoxue.db.TTaskItem" />
         <mapping class="com.baoxue.db.TDoTaskLog" />
         <mapping class="com.baoxue.db.TTask" />
+        <mapping class="com.baoxue.db.VTaskLog" />
     </session-factory>
 </hibernate-configuration>

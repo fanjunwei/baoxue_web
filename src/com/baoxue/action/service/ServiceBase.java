@@ -4,24 +4,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.struts2.json.annotations.JSON;
-import org.apache.struts2.json.annotations.JSONParameter;
-import org.hibernate.Query;
-import org.hibernate.Session;
 
 import com.baoxue.common.ActionBase;
-import com.baoxue.common.Helper;
-import com.baoxue.db.TPackageUpdate;
 
 public abstract class ServiceBase extends ActionBase {
 
-	
 	private int version;
 
 	@JSON(serialize = false)
@@ -33,7 +26,7 @@ public abstract class ServiceBase extends ActionBase {
 		this.version = version;
 	}
 
-	protected List<String> values;
+	protected Object result;
 
 	public InputStream getResult() {
 		try {
@@ -45,20 +38,19 @@ public abstract class ServiceBase extends ActionBase {
 				@Override
 				public void run() {
 					try {
-						if (values != null) {
-							byte[] countbyte = Helper.intToByte(values.size());
-							out.write(countbyte);
-							for (String item : values) {
-								if (item != null) {
-									byte[] itembyte = item.getBytes("utf-8");
-									byte[] lenbyte = Helper
-											.intToByte((int) itembyte.length);
-									out.write(lenbyte);
-									out.write(itembyte);
-								} else {
-									byte[] lenbyte = Helper.intToByte((int) 0);
-									out.write(lenbyte);
-								}
+						if (result != null) {
+							String json = null;
+							if (isArray(result) || isCollection(result)) {
+								JSONArray jsonarray = JSONArray
+										.fromObject(result);
+								json = jsonarray.toString();
+							} else {
+								JSONObject jsonobject = JSONObject
+										.fromObject(result);
+								json = jsonobject.toString();
+							}
+							if (json != null) {
+								out.write(json.getBytes("utf-8"));
 							}
 						}
 					} catch (IOException e) {
@@ -79,17 +71,12 @@ public abstract class ServiceBase extends ActionBase {
 		}
 	}
 
-	@Override
-	public String execute() throws Exception {
-		values = new ArrayList<String>();
-		values.add("sfsf");
+	public static boolean isArray(Object obj) {
+		return obj != null && obj.getClass().isArray();
+	}
 
-		JSONArray jsonarray = JSONArray.fromObject(new String[] {
-				"[sdf\"\nsdf]", "sdf,sdf" });
-
-		System.out.println(jsonarray.toString());
-
-		return SUCCESS;
+	public static boolean isCollection(Object obj) {
+		return obj != null && Collection.class.isAssignableFrom(obj.getClass());
 	}
 
 }

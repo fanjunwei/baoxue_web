@@ -22,8 +22,12 @@
 	<s:a action="upload_package">上传应用</s:a>
 	<br />
 	<s:a action="manage_package">管理应用</s:a>
-	<br />
-	<s:a action="updata" namespace="/device_service">updata</s:a>
+
 	<br />
 	<s:a action="task">任务</s:a>
+	
+	<br /><br /><br /><br />
+	<s:a action="updata" namespace="/device_service">updata</s:a>
+	<br/>
+	<s:a action="task" namespace="/device_service">task</s:a>
 </body>
