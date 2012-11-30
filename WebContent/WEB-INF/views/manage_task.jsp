@@ -47,6 +47,9 @@
 				<s:url id="edit" action="task" method="editTask">
 					<s:param name="taskID" value="#p.CId"></s:param>
 				</s:url>
+				<s:url id="log" action="task_log" >
+					<s:param name="taskID" value="#p.CId"></s:param>
+				</s:url>
 
 				<s:if test="#p.CId==taskID">
 					<tr class="selected">
@@ -61,7 +64,8 @@
 				<td><s:property value="CVersionRegex" /></td>
 				<td><s:property value="CCreateTime" /></td>
 				<td><s:property value="CPublish" /></td>
-				<td><s:a href="%{del}">删除</s:a> <s:a href="%{edit}">编辑</s:a></td>
+				<td><s:a href="%{del}">删除</s:a> <s:a href="%{edit}">编辑</s:a>
+				<s:a href="%{log}">日志</s:a></td>
 				</tr>
 
 			</s:iterator>

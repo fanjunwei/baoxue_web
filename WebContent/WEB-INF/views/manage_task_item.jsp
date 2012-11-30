@@ -27,6 +27,18 @@
 				<s:property value="taskName" />
 			</h2>
 		</div>
+		<s:if test="showMsg">
+			<div class="msg">
+				<p>
+					<s:property value="msgTitle" />
+				</p>
+				<ul>
+					<s:iterator value="msgItem">
+						<li><s:property /></li>
+					</s:iterator>
+				</ul>
+			</div>
+		</s:if>
 		<table id="mytab" border="1" class="t1">
 			<thead>
 				<tr>
@@ -171,17 +183,6 @@
 			<br />
 			<br />
 		</s:if>
-		<s:if test="showMsg">
-			<div class="msg">
-				<p>
-					<s:property value="msgTitle" />
-				</p>
-				<ul>
-					<s:iterator value="msgItem">
-						<li><s:property /></li>
-					</s:iterator>
-				</ul>
-			</div>
-		</s:if>
+
 	</s:form>
 </body>

@@ -1,6 +1,6 @@
 package com.baoxue.action.service;
 
-public class TaskItem {
+public class ResTaskItem {
 	private String command;
 	private String packageName;
 	private int versionCode;

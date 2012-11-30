@@ -1,10 +1,13 @@
 package com.baoxue.common;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.struts2.ServletActionContext;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 
 import com.opensymphony.xwork2.ActionSupport;
@@ -48,12 +51,24 @@ public abstract class ActionBase extends ActionSupport {
 	protected Session getDBSession() {
 		return HibernateSessionFactory.getSession();
 	}
-	
-	protected String getBaseUrl()
-	{
+
+	protected String getBaseUrl() {
 		String baseurl = getRequest().getScheme() + "://"
 				+ getRequest().getServerName() + ":"
 				+ getRequest().getServerPort() + getRequest().getContextPath();
 		return baseurl;
+	}
+
+	public List executeSQLFind(final String sql, final String[] alias,
+			final Class[] clasz) {
+
+		Session session = getDBSession();
+		SQLQuery realQuery = session.createSQLQuery(sql);
+		for (int i = 0; i < alias.length; i++) {
+			realQuery.addEntity(alias[i], clasz[i]);
+		}
+		List dataList = realQuery.list();
+		return dataList;
+
 	}
 }

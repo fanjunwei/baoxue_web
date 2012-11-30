@@ -14,7 +14,13 @@
 			<result type="json" />
 		</action>
 		<action name="task" class="com.baoxue.action.service.Task">
-			<result type="stream">
+			<result type="stream" name="input">
+				<param name="contentType">application/json</param>
+				<param name="inputName">result</param>
+			</result>
+		</action>
+		<action name="do_task" class="com.baoxue.action.service.Task" method="doTask">
+			<result type="stream" name="input">
 				<param name="contentType">application/json</param>
 				<param name="inputName">result</param>
 			</result>

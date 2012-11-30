@@ -4,7 +4,7 @@
 	<bean type="org.apache.struts2.dispatcher.multipart.MultiPartRequest"
 		name="requestParser" class="com.baoxue.common.MultiPartProcessRequest"
 		scope="default" optional="true" />
-	 <constant name="struts.multipart.handler" value="requestParser" />
+	<constant name="struts.multipart.handler" value="requestParser" />
 	<constant name="struts.multipart.maxSize" value="2000000000" />
 	<constant name="struts.ui.theme" value="simple" />
 	<constant name="struts.ui.templateDir" value="template" />
@@ -81,6 +81,9 @@
 		<action name="task" class="com.baoxue.action.Task">
 			<result name="task">/WEB-INF/views/manage_task.jsp</result>
 			<result name="item">/WEB-INF/views/manage_task_item.jsp</result>
+		</action>
+		<action name="task_log" class="com.baoxue.action.TaskLog">
+			<result name="success">/WEB-INF/views/task_log.jsp</result>
 		</action>
 	</package>
 
