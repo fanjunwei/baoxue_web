@@ -1,10 +1,11 @@
 package com.baoxue.action.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResTask {
 	String id;
-	List<ResTaskItem> items;
+	List<ResTaskItem> items = new ArrayList<ResTaskItem>();
 
 	public String getId() {
 		return id;

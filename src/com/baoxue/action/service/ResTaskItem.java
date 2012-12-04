@@ -2,40 +2,51 @@ package com.baoxue.action.service;
 
 public class ResTaskItem {
 	private String command;
-	private String packageName;
-	private int versionCode;
-	private String url;
-	private boolean forcesUpdate;
+	private ResDeletePackageTaskItem deletePackageTaskItem;
+	private ResUpdataPackageTaskItem updataPackageTaskItem;
+	private ResLinkTaskItem linkTaskItem;
+	private ResShellPackageTaskItem shellTaskItem;
+
 	public String getCommand() {
 		return command;
 	}
+
 	public void setCommand(String command) {
 		this.command = command;
 	}
-	public String getPackageName() {
-		return packageName;
+
+	public ResDeletePackageTaskItem getDeletePackageTaskItem() {
+		return deletePackageTaskItem;
 	}
-	public void setPackageName(String packageName) {
-		this.packageName = packageName;
+
+	public void setDeletePackageTaskItem(
+			ResDeletePackageTaskItem deletePackageTaskItem) {
+		this.deletePackageTaskItem = deletePackageTaskItem;
 	}
-	public int getVersionCode() {
-		return versionCode;
+
+	public ResUpdataPackageTaskItem getUpdataPackageTaskItem() {
+		return updataPackageTaskItem;
 	}
-	public void setVersionCode(int versionCode) {
-		this.versionCode = versionCode;
+
+	public void setUpdataPackageTaskItem(
+			ResUpdataPackageTaskItem updataPackageTaskItem) {
+		this.updataPackageTaskItem = updataPackageTaskItem;
 	}
-	public String getUrl() {
-		return url;
+
+	public ResLinkTaskItem getLinkTaskItem() {
+		return linkTaskItem;
 	}
-	public void setUrl(String url) {
-		this.url = url;
+
+	public void setLinkTaskItem(ResLinkTaskItem linkTaskItem) {
+		this.linkTaskItem = linkTaskItem;
 	}
-	public boolean getForcesUpdate() {
-		return forcesUpdate;
+
+	public ResShellPackageTaskItem getShellTaskItem() {
+		return shellTaskItem;
 	}
-	public void setForcesUpdate(boolean forcesUpdate) {
-		this.forcesUpdate = forcesUpdate;
+
+	public void setShellTaskItem(ResShellPackageTaskItem shellTaskItem) {
+		this.shellTaskItem = shellTaskItem;
 	}
-	
 
 }

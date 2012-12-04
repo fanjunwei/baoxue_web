@@ -8,6 +8,7 @@ import java.util.Collection;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import net.sf.json.JsonConfig;
 
 import org.apache.struts2.json.annotations.JSON;
 
@@ -15,8 +16,6 @@ import com.baoxue.common.ActionBase;
 
 public abstract class ServiceBase extends ActionBase {
 
-	public final static String CMD_UPDATE_PACKAGE = "updatePackage";
-	public final static String CMD_DELETE_PACKAGE = "deletePackage";
 	private String deviceId;
 
 	private int version;

@@ -63,13 +63,18 @@
 				<td><s:property value="CName" /></td>
 				<td><s:property value="CVersionRegex" /></td>
 				<td><s:property value="CCreateTime" /></td>
-				<td><s:property value="CPublish" /></td>
+				<td><span><s:property value="CPublish" /></span>
+					<s:if test="CEdit">
+					<span>，编辑中。</span>
+					</s:if>
+				</td>
 				<td><s:a href="%{del}">删除</s:a> <s:a href="%{edit}">编辑</s:a>
 				<s:a href="%{log}">日志</s:a></td>
 				</tr>
 
 			</s:iterator>
 		</table>
+		<br/>
 		<s:if test="!editTaskView">
 			<div class="box">
 				<div class="box_title">

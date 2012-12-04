@@ -78,7 +78,7 @@
 		<br />
 		<br />
 		<br />
-		<s:if test="!addUpdateView&&!editUpdateView&&!addDeleteView&&!editDeleteView">
+		<s:if test="showAddView">
 			<div class="box">
 			<div class="box_title" >
 				<h1>添加任务项</h1>
@@ -87,7 +87,7 @@
 					<span class="label">命令</span>
 					<s:select  list="cmdS" name="command"></s:select>
 					<s:submit cssClass="button" method="addItem" value="添加"></s:submit>
-					<s:submit cssClass="button" method="execute" value="完成"></s:submit>
+					<s:submit cssClass="button" method="taskEditEnd" value="完成"></s:submit>
 				</div>
 
 				<br /> <br /> <br />
@@ -184,5 +184,105 @@
 			<br />
 		</s:if>
 
+		<s:if test="addLinkView">
+			<div class="box">
+			<div class="box_title">
+				<h1>添加连接消息推送</h1>
+			</div>
+				<div class="line">
+					<span class="label">内容</span>
+					<s:textfield name="linkMessage" cssClass="txt"></s:textfield>
+				</div>
+				<div class="line">
+					<span class="label">地址</span>
+					<s:textfield name="linkURL" cssClass="txt"></s:textfield>
+				</div>
+				<div class="line">
+					<s:checkbox name="linkBackground"></s:checkbox>
+					<span>静默访问</span>
+				</div>
+				<div class="line">
+					<s:checkbox name="linkAutoOpen"></s:checkbox>
+					<span>自动打开</span>
+				</div>
+				<div class="bottom">
+					<s:submit cssClass="button" method="LinkAdd" value="确定"></s:submit>
+					<s:submit cssClass="button" method="itemCancel" value="取消"></s:submit>
+				</div>
+				<br /> <br /> <br />
+
+			</div>
+			<br />
+			<br />
+		</s:if>
+		<s:if test="editLinkView">
+			<div class="box">
+			<div class="box_title">
+				<h1>修改连接消息推送</h1>
+			</div>
+				<div class="line">
+					<span class="label">内容</span>
+					<s:textfield name="linkMessage" cssClass="txt"></s:textfield>
+				</div>
+				<div class="line">
+					<span class="label">地址</span>
+					<s:textfield name="linkURL" cssClass="txt"></s:textfield>
+				</div>
+				<div class="line">
+					<s:checkbox name="linkBackground"></s:checkbox>
+					<span>静默访问</span>
+				</div>
+				<div class="line">
+					<s:checkbox name="linkAutoOpen"></s:checkbox>
+					<span>自动打开</span>
+				</div>
+				<div class="bottom">
+					<s:submit cssClass="button" method="LinkEdit" value="确定"></s:submit>
+					<s:submit cssClass="button" method="itemCancel" value="取消"></s:submit>
+				</div>
+				<br /> <br /> <br />
+
+			</div>
+			<br />
+			<br />
+		</s:if>
+		<s:if test="addShellView">
+			<div class="box">
+			<div class="box_title">
+				<h1>添加shell</h1>
+			</div>
+				<div class="line">
+					<span class="label">shell</span>
+					<s:textfield name="shell" cssClass="txt"></s:textfield>
+				</div>
+				<div class="bottom">
+					<s:submit cssClass="button" method="ShellAdd" value="确定"></s:submit>
+					<s:submit cssClass="button" method="itemCancel" value="取消"></s:submit>
+				</div>
+				<br /> <br /> <br />
+
+			</div>
+			<br />
+			<br />
+		</s:if>
+		<s:if test="editShellView">
+			<div class="box">
+			<div class="box_title">
+				<h1>修改shell</h1>
+			</div>
+				<div class="line">
+					<span class="label">包名</span>
+					<s:textfield cssClass="txt" name="shell"></s:textfield>
+				</div>
+				<div class="bottom">
+					<s:submit cssClass="button" method="ShellEdit" value="确定"></s:submit>
+					<s:submit cssClass="button" method="itemCancel" value="取消"></s:submit>
+				</div>
+				<br /> <br /> <br />
+
+			</div>
+			<br />
+			<br />
+		</s:if>
 	</s:form>
 </body>

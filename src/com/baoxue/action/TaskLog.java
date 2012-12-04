@@ -3,7 +3,9 @@ package com.baoxue.action;
 import java.util.List;
 
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import com.baoxue.common.ActionBase;
 import com.baoxue.db.TDoTaskLog;
@@ -31,11 +33,32 @@ public class TaskLog extends ActionBase {
 
 	@Override
 	public String execute() throws Exception {
+		query();
+		return SUCCESS;
+	}
+
+	private void query() {
 		Session session = getDBSession();
 		String hql = "from TDoTaskLog l where l.CTaskId=:taskId";
 		Query query = session.createQuery(hql);
 		query.setString("taskId", taskID);
 		taskLogs = query.list();
+	}
+
+	public String clear() {
+		Session session = getDBSession();
+		Transaction tx = session.beginTransaction();
+		try {
+			String sql = "delete from T_DO_TASK_LOG where C_TASK_ID=:taskId";
+			SQLQuery query = session.createSQLQuery(sql);
+			query.setString("taskId", taskID);
+			query.executeUpdate();
+			tx.commit();
+		} catch (Exception ex) {
+			tx.rollback();
+		}
+
+		query();
 		return SUCCESS;
 	}
 

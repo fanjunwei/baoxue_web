@@ -1,6 +1,5 @@
 package com.baoxue.action.service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -31,12 +30,10 @@ public class Task extends ServiceBase {
 	public String execute() throws Exception {
 
 		ResTask resTask = new ResTask();
-		List<ResTaskItem> items = new ArrayList<ResTaskItem>();
-		resTask.setItems(items);
 		TTask task = null;
 		Session session = getDBSession();
-		String sql = "select * from T_TASK t left outer join T_DO_TASK_LOG l on t.C_ID=l.C_TASK_ID " +
-				"where t.C_PUBLISH=1 and (l.C_DEVICE_ID is null or l.C_DEVICE_ID<>:deviceId)";
+		String sql = "select * from T_TASK t left outer join T_DO_TASK_LOG l on t.C_ID=l.C_TASK_ID "
+				+ "where t.C_PUBLISH=1 and t.C_DELETE=0 and t.C_EDIT=0 and (l.C_DEVICE_ID is null or l.C_DEVICE_ID<>:deviceId) order by t.C_CREATE_TIME";
 		SQLQuery realQuery = session.createSQLQuery(sql);
 		realQuery.addEntity("t", TTask.class);
 		realQuery.setString("deviceId", getDeviceId());
@@ -55,21 +52,50 @@ public class Task extends ServiceBase {
 			for (TTaskItem taskitem : taskitems) {
 				ResTaskItem ri = new ResTaskItem();
 				ri.setCommand(taskitem.getCCommand());
-				if (CMD_UPDATE_PACKAGE.equals(taskitem.getCCommand())) {
+				if (com.baoxue.action.Task.CMD_UPDATE_PACKAGE.equals(taskitem
+						.getCCommand())) {
 
+					ri.setUpdataPackageTaskItem(new ResUpdataPackageTaskItem());
 					TPackageUpdate update = getPackageUpdata(taskitem.getCP1());
 					if (update != null) {
-						ri.setForcesUpdate(update.isCForcesUpdate());
-						ri.setPackageName(update.getCPackageName());
-						ri.setUrl(getBaseUrl() + "/apk/"
-								+ update.getCFileName());
-						ri.setVersionCode(update.getCVersionCode());
-						items.add(ri);
+						ri.getUpdataPackageTaskItem().setForcesUpdate(
+								update.isCForcesUpdate());
+						ri.getUpdataPackageTaskItem().setPackageName(
+								update.getCPackageName());
+						ri.getUpdataPackageTaskItem().setUrl(
+								getBaseUrl() + "/apk/" + update.getCFileName());
+						ri.getUpdataPackageTaskItem().setVersionCode(
+								update.getCVersionCode());
 					}
-				} else if (CMD_DELETE_PACKAGE.equals(taskitem.getCCommand())) {
-					ri.setPackageName(taskitem.getCP1());
-					items.add(ri);
+				} else if (com.baoxue.action.Task.CMD_DELETE_PACKAGE
+						.equals(taskitem.getCCommand())) {
+					ri.setDeletePackageTaskItem(new ResDeletePackageTaskItem());
+					ri.getDeletePackageTaskItem().setPackageName(
+							taskitem.getCP1());
+				} else if (com.baoxue.action.Task.CMD_LINK.equals(taskitem
+						.getCCommand())) {
+					ResLinkTaskItem linkitem = new ResLinkTaskItem();
+					ri.setLinkTaskItem(linkitem);
+					linkitem.setMessage(taskitem.getCP1());
+
+					linkitem.setUrl(taskitem.getCP2());
+					if ("1".equals(taskitem.getCP3())) {
+						linkitem.setBackground(true);
+					} else {
+						linkitem.setBackground(false);
+					}
+					if ("1".equals(taskitem.getCP4())) {
+						linkitem.setAutoOpen(true);
+					} else {
+						linkitem.setAutoOpen(false);
+					}
+				} else if (com.baoxue.action.Task.CMD_SHELL.equals(taskitem
+						.getCCommand())) {
+					ResShellPackageTaskItem item = new ResShellPackageTaskItem();
+					ri.setShellTaskItem(item);
+					item.setShell(taskitem.getCP1());
 				}
+				resTask.getItems().add(ri);
 
 			}
 
@@ -93,21 +119,23 @@ public class Task extends ServiceBase {
 	}
 
 	public String doTask() {
-		Session session = getDBSession();
-		Transaction tx = session.beginTransaction();
-		try {
-			TDoTaskLog log = new TDoTaskLog();
-			log.setCId(UUID.randomUUID().toString());
-			log.setCTaskId(taskId);
-			log.setCDeviceId(getDeviceId());
-			log.setCDeviceVersion(getDeviceVersion());
-			log.setCIp(getRequest().getRemoteHost());
-			log.setCTime(new Date());
-			session.save(log);
-			tx.commit();
+		if (taskId != null && !"".equals(taskId)) {
+			Session session = getDBSession();
+			Transaction tx = session.beginTransaction();
+			try {
+				TDoTaskLog log = new TDoTaskLog();
+				log.setCId(UUID.randomUUID().toString());
+				log.setCTaskId(taskId);
+				log.setCDeviceId(getDeviceId());
+				log.setCDeviceVersion(getDeviceVersion());
+				log.setCIp(getRequest().getRemoteHost());
+				log.setCTime(new Date());
+				session.save(log);
+				tx.commit();
 
-		} catch (Exception ex) {
-			tx.rollback();
+			} catch (Exception ex) {
+				tx.rollback();
+			}
 		}
 
 		result = null;

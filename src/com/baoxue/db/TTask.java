@@ -1,6 +1,6 @@
 package com.baoxue.db;
 
-// Generated 2012-11-28 15:32:20 by Hibernate Tools 3.4.0.CR1
+// Generated 2012-12-4 10:19:20 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -24,27 +24,30 @@ public class TTask implements java.io.Serializable {
 	private Date CCreateTime;
 	private boolean CPublish;
 	private boolean CDelete;
+	private boolean CEdit;
 
 	public TTask() {
 	}
 
 	public TTask(String CId, String CName, Date CCreateTime, boolean CPublish,
-			boolean CDelete) {
+			boolean CDelete, boolean CEdit) {
 		this.CId = CId;
 		this.CName = CName;
 		this.CCreateTime = CCreateTime;
 		this.CPublish = CPublish;
 		this.CDelete = CDelete;
+		this.CEdit = CEdit;
 	}
 
 	public TTask(String CId, String CName, String CVersionRegex,
-			Date CCreateTime, boolean CPublish, boolean CDelete) {
+			Date CCreateTime, boolean CPublish, boolean CDelete, boolean CEdit) {
 		this.CId = CId;
 		this.CName = CName;
 		this.CVersionRegex = CVersionRegex;
 		this.CCreateTime = CCreateTime;
 		this.CPublish = CPublish;
 		this.CDelete = CDelete;
+		this.CEdit = CEdit;
 	}
 
 	@Id
@@ -101,6 +104,15 @@ public class TTask implements java.io.Serializable {
 
 	public void setCDelete(boolean CDelete) {
 		this.CDelete = CDelete;
+	}
+
+	@Column(name = "C_EDIT", nullable = false)
+	public boolean isCEdit() {
+		return this.CEdit;
+	}
+
+	public void setCEdit(boolean CEdit) {
+		this.CEdit = CEdit;
 	}
 
 }
