@@ -93,12 +93,19 @@ public class ManagePackage extends ActionBase {
 			if (file.delete()) {
 				System.out.println("success delete file");
 			}
-			session.delete(res.get(0));
+			try {
+				session.delete(res.get(0));
+				tx.commit();
+			} catch (Exception ex) {
+				tx.rollback();
+			} finally {
+				session.close();
+			}
 			setMsgTitle("删除成功");
 		} else {
 			setMsgTitle("删除失败");
 		}
-		tx.commit();
+
 		query();
 		return SUCCESS;
 	}
@@ -107,17 +114,21 @@ public class ManagePackage extends ActionBase {
 		setShowMsg(false);
 		Session session = getDBSession();
 
-		String hql = "from TPackageUpdate p where p.CId=:id";
-		Query query = session.createQuery(hql);
-		query.setParameter("id", id);
-		@SuppressWarnings("unchecked")
-		List<TPackageUpdate> res = query.list();
-		if (res.size() > 0) {
-			editPackage = res.get(0);
-			return "edit";
+		try {
+			String hql = "from TPackageUpdate p where p.CId=:id";
+			Query query = session.createQuery(hql);
+			query.setParameter("id", id);
+			@SuppressWarnings("unchecked")
+			List<TPackageUpdate> res = query.list();
+			if (res.size() > 0) {
+				editPackage = res.get(0);
+				return "edit";
 
-		} else {
-			return INPUT;
+			} else {
+				return INPUT;
+			}
+		} finally {
+			session.close();
 		}
 
 	}
@@ -127,22 +138,29 @@ public class ManagePackage extends ActionBase {
 			setShowMsg(true);
 			Session session = getDBSession();
 			Transaction tx = session.beginTransaction();
-			String hql = "from TPackageUpdate p where p.CId=:id";
-			Query query = session.createQuery(hql);
-			query.setParameter("id", editPackage.getCId());
-			@SuppressWarnings("unchecked")
-			List<TPackageUpdate> res = query.list();
-			if (res.size() > 0) {
-				TPackageUpdate pk = res.get(0);
-				pk.setCOldPackageName(editPackage.getCOldPackageName());
-				pk.setCForcesUpdate(editPackage.isCForcesUpdate());
-				pk.setCPublish(editPackage.isCPublish());
-				session.update(pk);
-				setMsgTitle("编辑成功");
-			} else {
-				setMsgTitle("编辑失败");
+			try {
+				String hql = "from TPackageUpdate p where p.CId=:id";
+				Query query = session.createQuery(hql);
+				query.setParameter("id", editPackage.getCId());
+				@SuppressWarnings("unchecked")
+				List<TPackageUpdate> res = query.list();
+				if (res.size() > 0) {
+					TPackageUpdate pk = res.get(0);
+					pk.setCOldPackageName(editPackage.getCOldPackageName());
+					pk.setCForcesUpdate(editPackage.isCForcesUpdate());
+					pk.setCPublish(editPackage.isCPublish());
+					session.update(pk);
+					setMsgTitle("编辑成功");
+				} else {
+					setMsgTitle("编辑失败");
+				}
+				tx.commit();
+			} catch (Exception ex) {
+				tx.rollback();
+			} finally {
+				session.close();
 			}
-			tx.commit();
+
 		} else {
 			setShowMsg(false);
 		}
@@ -150,11 +168,15 @@ public class ManagePackage extends ActionBase {
 		return INPUT;
 	}
 
-	
 	@SuppressWarnings("unchecked")
 	private void query() {
 		String hql = "from TPackageUpdate p order by p.CPackageName, p.CUploadTime";
-		Query query = getDBSession().createQuery(hql);
-		packages = query.list();
+		Session session = getDBSession();
+		try {
+			Query query = session.createQuery(hql);
+			packages = query.list();
+		} finally {
+			session.close();
+		}
 	}
 }

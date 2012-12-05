@@ -14,9 +14,12 @@
 		<interceptors>
 			<!-- 登录验证 -->
 			<interceptor name="loginVerify" class="com.baoxue.common.LoginInterceptor"></interceptor>
+			<interceptor name="dbSession"
+				class="com.baoxue.common.DbSessionInterceptor"></interceptor>
 			<interceptor-stack name="verify">
-				<interceptor-ref name="defaultStack"></interceptor-ref>
-				<interceptor-ref name="loginVerify"></interceptor-ref>
+				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="loginVerify" />
+				<interceptor-ref name="dbSession" />
 			</interceptor-stack>
 
 			<interceptor-stack name="myupload">
@@ -27,6 +30,7 @@
 				</interceptor-ref>
 				<interceptor-ref name="defaultStack" />
 				<interceptor-ref name="loginVerify" />
+				<interceptor-ref name="dbSession" />
 
 			</interceptor-stack>
 		</interceptors>

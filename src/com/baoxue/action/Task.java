@@ -326,9 +326,14 @@ public class Task extends ActionBase {
 
 	public String taskEditEnd() {
 
-		setTaskEditState(taskID, false);
-		taskID = null;
-		publish = false;
+		Session session = getDBSession();
+		try {
+			setTaskEditState(taskID, false, session);
+			taskID = null;
+			publish = false;
+		} finally {
+			session.close();
+		}
 		queryTask();
 		return "task";
 	}
@@ -362,6 +367,8 @@ public class Task extends ActionBase {
 			msgTitle = "添加失败";
 			msgItem.add(ex.getMessage());
 			return "task";
+		} finally {
+			session.close();
 		}
 
 		queryItem();
@@ -370,13 +377,17 @@ public class Task extends ActionBase {
 	}
 
 	public String taskEditItem() {
-		setTaskEditState(taskID, true);
+		Session session = getDBSession();
+		try {
+			setTaskEditState(taskID, true, session);
+		} finally {
+			session.close();
+		}
 		queryItem();
 		return "item";
 	}
 
-	private boolean setTaskEditState(String id, boolean edit) {
-		Session session = getDBSession();
+	private boolean setTaskEditState(String id, boolean edit, Session session) {
 		Transaction tx = session.beginTransaction();
 		try {
 			String hql = "from TTask t where t.CId=:id";
@@ -399,9 +410,8 @@ public class Task extends ActionBase {
 
 	}
 
-	private void deleteItem(Session session, Transaction tx, String id)
-			throws Exception {
-		TTaskItem item = queryItemById(id);
+	private void deleteItem(Session session, String id) throws Exception {
+		TTaskItem item = queryItemById(id, session);
 		if (item != null) {
 			if (CMD_UPDATE_PACKAGE.equals(item.getCCommand())) {
 				String hql = "from TPackageUpdate p where p.CId=:id";
@@ -430,7 +440,7 @@ public class Task extends ActionBase {
 		Transaction tx = session.beginTransaction();
 		showMsg = true;
 		try {
-			deleteItem(session, tx, itemID);
+			deleteItem(session, itemID);
 			tx.commit();
 			setMsgTitle("删除成功");
 		} catch (Exception ex) {
@@ -439,6 +449,8 @@ public class Task extends ActionBase {
 			setMsgTitle("删除失败");
 			msgItem.clear();
 			msgItem.add(ex.getMessage());
+		} finally {
+			session.close();
 		}
 
 		queryItem();
@@ -446,43 +458,48 @@ public class Task extends ActionBase {
 	}
 
 	public String editItem() throws Exception {
-		TTaskItem item = queryItemById(itemID);
-		if (item != null) {
-			if (CMD_UPDATE_PACKAGE.equals(item.getCCommand())) {
-				editUpdateView = true;
-				Session session = getDBSession();
-				String hql = "from TPackageUpdate p where p.CId=:id";
-				Query query = session.createQuery(hql);
-				query.setParameter("id", item.getCP1());
-				@SuppressWarnings("unchecked")
-				List<TPackageUpdate> res = query.list();
-				if (res != null && res.size() > 0) {
-					forcesUpdate = res.get(0).isCForcesUpdate();
-				}
-			} else if (CMD_DELETE_PACKAGE.equals(item.getCCommand())) {
-				editDeleteView = true;
-				packageName = item.getCP1();
-			} else if (CMD_LINK.equals(item.getCCommand())) {
-				editLinkView = true;
-				linkMessage = item.getCP1();
-				linkURL = item.getCP2();
-				if ("1".equals(item.getCP3())) {
-					linkBackground = true;
-				} else {
-					linkBackground = false;
-				}
-				if ("1".equals(item.getCP4())) {
-					linkAutoOpen = true;
-				} else {
-					linkAutoOpen = false;
+		Session session = getDBSession();
+		try {
+			TTaskItem item = queryItemById(itemID, session);
+			if (item != null) {
+				if (CMD_UPDATE_PACKAGE.equals(item.getCCommand())) {
+					editUpdateView = true;
+
+					String hql = "from TPackageUpdate p where p.CId=:id";
+					Query query = session.createQuery(hql);
+					query.setParameter("id", item.getCP1());
+					@SuppressWarnings("unchecked")
+					List<TPackageUpdate> res = query.list();
+					if (res != null && res.size() > 0) {
+						forcesUpdate = res.get(0).isCForcesUpdate();
+					}
+				} else if (CMD_DELETE_PACKAGE.equals(item.getCCommand())) {
+					editDeleteView = true;
+					packageName = item.getCP1();
+				} else if (CMD_LINK.equals(item.getCCommand())) {
+					editLinkView = true;
+					linkMessage = item.getCP1();
+					linkURL = item.getCP2();
+					if ("1".equals(item.getCP3())) {
+						linkBackground = true;
+					} else {
+						linkBackground = false;
+					}
+					if ("1".equals(item.getCP4())) {
+						linkAutoOpen = true;
+					} else {
+						linkAutoOpen = false;
+					}
+
+				} else if (CMD_SHELL.equals(item.getCCommand())) {
+
+					editShellView = true;
+					shell = item.getCP1();
 				}
 
-			} else if (CMD_SHELL.equals(item.getCCommand())) {
-
-				editShellView = true;
-				shell = item.getCP1();
 			}
-
+		} finally {
+			session.close();
 		}
 		queryItem();
 		return "item";
@@ -540,7 +557,7 @@ public class Task extends ActionBase {
 							taskitem.setCId(itemID);
 							taskitem.setCCommand(CMD_UPDATE_PACKAGE);
 							taskitem.setCEnable(true);
-							taskitem.setCIndex(getMaxIndex() + 1);
+							taskitem.setCIndex(getMaxIndex(session) + 1);
 							String des = "更新包：" + pu.getCPackageName() + ",";
 							if (forcesUpdate) {
 								des += "强制更新.";
@@ -566,7 +583,10 @@ public class Task extends ActionBase {
 							setMsgTitle("添加失败");
 							msgItem.clear();
 							msgItem.add(ex.getMessage());
+						} finally {
+							session.close();
 						}
+
 					} else {
 						desFile.deleteOnExit();
 						setShowMsg(true);
@@ -588,43 +608,47 @@ public class Task extends ActionBase {
 
 	public String UpdateEdit() throws Exception {
 		Session session = getDBSession();
-		Transaction tx = session.beginTransaction();
-		TTaskItem item = queryItemById(itemID);
-		showMsg = true;
-		if (item != null) {
-			try {
-				if (CMD_UPDATE_PACKAGE.equals(item.getCCommand())) {
-					String hql = "from TPackageUpdate p where p.CId=:id";
-					Query query = session.createQuery(hql);
-					query.setParameter("id", item.getCP1());
-					@SuppressWarnings("unchecked")
-					List<TPackageUpdate> res = query.list();
-					if (res != null && res.size() > 0) {
-						TPackageUpdate pu = res.get(0);
-						pu.setCForcesUpdate(forcesUpdate);
-						session.update(pu);
+		try {
+			Transaction tx = session.beginTransaction();
+			TTaskItem item = queryItemById(itemID, session);
+			showMsg = true;
+			if (item != null) {
+				try {
+					if (CMD_UPDATE_PACKAGE.equals(item.getCCommand())) {
+						String hql = "from TPackageUpdate p where p.CId=:id";
+						Query query = session.createQuery(hql);
+						query.setParameter("id", item.getCP1());
+						@SuppressWarnings("unchecked")
+						List<TPackageUpdate> res = query.list();
+						if (res != null && res.size() > 0) {
+							TPackageUpdate pu = res.get(0);
+							pu.setCForcesUpdate(forcesUpdate);
+							session.update(pu);
 
-						String des = "更新包：" + pu.getCPackageName() + ",";
-						if (forcesUpdate) {
-							des += "强制更新.";
-						} else {
-							des += "非强制更新.";
+							String des = "更新包：" + pu.getCPackageName() + ",";
+							if (forcesUpdate) {
+								des += "强制更新.";
+							} else {
+								des += "非强制更新.";
+							}
+							item.setCDescription(des);
+							session.update(pu);
+							tx.commit();
+							setMsgTitle("修改成功");
 						}
-						item.setCDescription(des);
-						session.update(pu);
-						tx.commit();
-						setMsgTitle("修改成功");
+
 					}
 
+				} catch (Exception ex) {
+					tx.rollback();
+					setShowMsg(true);
+					setMsgTitle("修改失败");
+					msgItem.clear();
+					msgItem.add(ex.getMessage());
 				}
-
-			} catch (Exception ex) {
-				tx.rollback();
-				setShowMsg(true);
-				setMsgTitle("修改失败");
-				msgItem.clear();
-				msgItem.add(ex.getMessage());
 			}
+		} finally {
+			session.close();
 		}
 		queryItem();
 		return "item";
@@ -637,16 +661,17 @@ public class Task extends ActionBase {
 	}
 
 	public String DeleteAdd() throws Exception {
+		Session session = getDBSession();
 		TTaskItem item = new TTaskItem();
 		itemID = UUID.randomUUID().toString();
 		item.setCId(itemID);
 		item.setCTaskId(taskID);
 		item.setCCommand(CMD_DELETE_PACKAGE);
 		item.setCEnable(true);
-		item.setCIndex(getMaxIndex() + 1);
+		item.setCIndex(getMaxIndex(session) + 1);
 		item.setCDescription("删除包:" + packageName);
 		item.setCP1(packageName);
-		Session session = getDBSession();
+
 		Transaction tx = session.beginTransaction();
 		showMsg = true;
 		try {
@@ -659,65 +684,74 @@ public class Task extends ActionBase {
 			setMsgTitle("添加失败");
 			msgItem.clear();
 			msgItem.add(ex.getMessage());
+		} finally {
+			session.close();
 		}
 		queryItem();
 		return "item";
 	}
 
 	public String LinkAdd() {
-		TTaskItem item = new TTaskItem();
-		itemID = UUID.randomUUID().toString();
-		item.setCId(itemID);
-		item.setCTaskId(taskID);
-		item.setCCommand(CMD_LINK);
-		item.setCEnable(true);
-		item.setCIndex(getMaxIndex() + 1);
-		String str = "消息：" + linkMessage + ",地址：" + linkURL + "。";
-		item.setCP1(linkMessage);
-		item.setCP2(linkURL);
-		if (isLinkBackground()) {
-			str += "静默访问。";
-			item.setCP3("1");
-		} else {
-			item.setCP3("0");
-		}
-		if (isLinkAutoOpen()) {
-			str += "自动打开。";
-			item.setCP4("1");
-		} else {
-			item.setCP4("0");
-		}
-		item.setCDescription(str);
-
 		Session session = getDBSession();
-		Transaction tx = session.beginTransaction();
-		showMsg = true;
 		try {
-			session.save(item);
-			tx.commit();
-			setMsgTitle("添加成功");
-		} catch (Exception ex) {
-			tx.rollback();
-			setShowMsg(true);
-			setMsgTitle("添加失败");
-			msgItem.clear();
-			msgItem.add(ex.getMessage());
+			TTaskItem item = new TTaskItem();
+			itemID = UUID.randomUUID().toString();
+			item.setCId(itemID);
+			item.setCTaskId(taskID);
+			item.setCCommand(CMD_LINK);
+			item.setCEnable(true);
+			item.setCIndex(getMaxIndex(session) + 1);
+			String str = "消息：" + linkMessage + ",地址：" + linkURL + "。";
+			item.setCP1(linkMessage);
+			item.setCP2(linkURL);
+			if (isLinkBackground()) {
+				str += "静默访问。";
+				item.setCP3("1");
+			} else {
+				item.setCP3("0");
+			}
+			if (isLinkAutoOpen()) {
+				str += "自动打开。";
+				item.setCP4("1");
+			} else {
+				item.setCP4("0");
+			}
+			item.setCDescription(str);
+
+			Transaction tx = session.beginTransaction();
+			showMsg = true;
+			try {
+				session.save(item);
+				tx.commit();
+				setMsgTitle("添加成功");
+			} catch (Exception ex) {
+				tx.rollback();
+				setShowMsg(true);
+				setMsgTitle("添加失败");
+				msgItem.clear();
+				msgItem.add(ex.getMessage());
+			}
+		} finally {
+			session.close();
 		}
 		queryItem();
 		return "item";
 	}
 
 	public String ShellAdd() {
+		Session session = getDBSession();
+		try
+		{
 		TTaskItem item = new TTaskItem();
 		itemID = UUID.randomUUID().toString();
 		item.setCId(itemID);
 		item.setCTaskId(taskID);
 		item.setCCommand(CMD_SHELL);
 		item.setCEnable(true);
-		item.setCIndex(getMaxIndex() + 1);
+		item.setCIndex(getMaxIndex(session) + 1);
 		item.setCP1(shell);
 		item.setCDescription("执行shell：" + shell);
-		Session session = getDBSession();
+
 		Transaction tx = session.beginTransaction();
 		showMsg = true;
 		try {
@@ -730,6 +764,11 @@ public class Task extends ActionBase {
 			setMsgTitle("添加失败");
 			msgItem.clear();
 			msgItem.add(ex.getMessage());
+		}
+		}
+		finally
+		{
+			session.close();
 		}
 		queryItem();
 		return "item";
@@ -737,26 +776,30 @@ public class Task extends ActionBase {
 
 	public String DeleteEdit() throws Exception {
 		Session session = getDBSession();
-		Transaction tx = session.beginTransaction();
-		TTaskItem item = queryItemById(itemID);
-		showMsg = true;
-		if (item != null) {
-			try {
-				if (CMD_DELETE_PACKAGE.equals(item.getCCommand())) {
-					item.setCDescription("删除包:" + packageName);
-					item.setCP1(packageName);
-					session.update(item);
-					tx.commit();
-					setMsgTitle("修改成功");
-				}
+		try {
+			Transaction tx = session.beginTransaction();
+			TTaskItem item = queryItemById(itemID, session);
+			showMsg = true;
+			if (item != null) {
+				try {
+					if (CMD_DELETE_PACKAGE.equals(item.getCCommand())) {
+						item.setCDescription("删除包:" + packageName);
+						item.setCP1(packageName);
+						session.update(item);
+						tx.commit();
+						setMsgTitle("修改成功");
+					}
 
-			} catch (Exception ex) {
-				tx.rollback();
-				setShowMsg(true);
-				setMsgTitle("修改失败");
-				msgItem.clear();
-				msgItem.add(ex.getMessage());
+				} catch (Exception ex) {
+					tx.rollback();
+					setShowMsg(true);
+					setMsgTitle("修改失败");
+					msgItem.clear();
+					msgItem.add(ex.getMessage());
+				}
 			}
+		} finally {
+			session.close();
 		}
 		queryItem();
 		return "item";
@@ -764,35 +807,39 @@ public class Task extends ActionBase {
 
 	public String LinkEdit() throws Exception {
 		Session session = getDBSession();
-		Transaction tx = session.beginTransaction();
-		TTaskItem item = queryItemById(itemID);
-		showMsg = true;
-		item.setCP1(linkMessage);
-		item.setCP2(linkURL);
-		String str = "消息：" + linkMessage + ",地址：" + linkURL + "。";
-		if (isLinkBackground()) {
-			str += "静默访问。";
-			item.setCP3("1");
-		} else {
-			item.setCP3("0");
-		}
-		if (isLinkAutoOpen()) {
-			str += "自动打开。";
-			item.setCP4("1");
-		} else {
-			item.setCP4("0");
-		}
-		item.setCDescription(str);
 		try {
-			session.save(item);
-			tx.commit();
-			setMsgTitle("修改成功");
-		} catch (Exception ex) {
-			tx.rollback();
-			setShowMsg(true);
-			setMsgTitle("修改失败");
-			msgItem.clear();
-			msgItem.add(ex.getMessage());
+			Transaction tx = session.beginTransaction();
+			TTaskItem item = queryItemById(itemID, session);
+			showMsg = true;
+			item.setCP1(linkMessage);
+			item.setCP2(linkURL);
+			String str = "消息：" + linkMessage + ",地址：" + linkURL + "。";
+			if (isLinkBackground()) {
+				str += "静默访问。";
+				item.setCP3("1");
+			} else {
+				item.setCP3("0");
+			}
+			if (isLinkAutoOpen()) {
+				str += "自动打开。";
+				item.setCP4("1");
+			} else {
+				item.setCP4("0");
+			}
+			item.setCDescription(str);
+			try {
+				session.save(item);
+				tx.commit();
+				setMsgTitle("修改成功");
+			} catch (Exception ex) {
+				tx.rollback();
+				setShowMsg(true);
+				setMsgTitle("修改失败");
+				msgItem.clear();
+				msgItem.add(ex.getMessage());
+			}
+		} finally {
+			session.close();
 		}
 		queryItem();
 		return "item";
@@ -800,28 +847,32 @@ public class Task extends ActionBase {
 
 	public String ShellEdit() throws Exception {
 		Session session = getDBSession();
-		Transaction tx = session.beginTransaction();
-		TTaskItem item = queryItemById(itemID);
-		showMsg = true;
-		item.setCP1(shell);
-		item.setCDescription("执行shell：" + shell);
 		try {
-			session.save(item);
-			tx.commit();
-			setMsgTitle("修改成功");
-		} catch (Exception ex) {
-			tx.rollback();
-			setShowMsg(true);
-			setMsgTitle("修改失败");
-			msgItem.clear();
-			msgItem.add(ex.getMessage());
+			Transaction tx = session.beginTransaction();
+			TTaskItem item = queryItemById(itemID, session);
+			showMsg = true;
+			item.setCP1(shell);
+			item.setCDescription("执行shell：" + shell);
+			try {
+				session.save(item);
+				tx.commit();
+				setMsgTitle("修改成功");
+			} catch (Exception ex) {
+				tx.rollback();
+				setShowMsg(true);
+				setMsgTitle("修改失败");
+				msgItem.clear();
+				msgItem.add(ex.getMessage());
+			}
+		} finally {
+			session.close();
 		}
 		queryItem();
 		return "item";
 	}
 
-	private void queryItem() {
-		Session session = getDBSession();
+	private void queryItem(Session session) {
+
 		String hql = "from TTaskItem t where t.CTaskId=:taskId order by CIndex";
 		Query query = session.createQuery(hql);
 		query.setString("taskId", taskID);
@@ -835,10 +886,21 @@ public class Task extends ActionBase {
 				taskName = tasks.get(0).getCName();
 			}
 		}
+
 	}
 
-	private TTaskItem queryItemById(String id) {
+	private void queryItem() {
 		Session session = getDBSession();
+		try {
+			queryItem(session);
+		} finally {
+			session.close();
+		}
+
+	}
+
+	private TTaskItem queryItemById(String id, Session session) {
+
 		String hql = "from TTaskItem t where t.CId=:id";
 		Query query = session.createQuery(hql);
 		query.setString("id", id);
@@ -850,10 +912,10 @@ public class Task extends ActionBase {
 
 	}
 
-	private int getMaxIndex() {
+	private int getMaxIndex(Session session) {
 		int index = 0;
 		if (taskItems == null) {
-			queryItem();
+			queryItem(session);
 		}
 		if (taskItems != null) {
 			for (TTaskItem item : taskItems) {
@@ -888,7 +950,7 @@ public class Task extends ActionBase {
 				query.setString("taskId", task.getCId());
 				List<TTaskItem> items = query.list();
 				for (TTaskItem item : items) {
-					deleteItem(session, tx, item.getCId());
+					deleteItem(session, item.getCId());
 				}
 				session.delete(task);
 				tx.commit();
@@ -900,56 +962,69 @@ public class Task extends ActionBase {
 			msgItem.clear();
 			msgItem.add(ex.getMessage());
 		}
+		finally
+		{
+			session.close();
+		}
 		queryTask();
 		return "task";
 	}
 
 	public String editTask() throws Exception {
+		Session session = getDBSession();
+		try {
+			if (setTaskEditState(taskID, true, session)) {
+				editTaskView = true;
 
-		if (setTaskEditState(taskID, true)) {
-			editTaskView = true;
-			Session session = getDBSession();
-			String hql = "from TTask t where t.CId=:id";
-			Query query = session.createQuery(hql);
-			query.setString("id", taskID);
-			List<TTask> tasks = query.list();
-			if (tasks != null && tasks.size() > 0) {
-				TTask task = tasks.get(0);
-				taskName = task.getCName();
-				versionRegex = task.getCVersionRegex();
-				publish = task.isCPublish();
+				String hql = "from TTask t where t.CId=:id";
+				Query query = session.createQuery(hql);
+				query.setString("id", taskID);
+				List<TTask> tasks = query.list();
+				if (tasks != null && tasks.size() > 0) {
+					TTask task = tasks.get(0);
+					taskName = task.getCName();
+					versionRegex = task.getCVersionRegex();
+					publish = task.isCPublish();
+				}
 			}
+		} finally {
+			session.close();
 		}
 		queryTask();
 		return "task";
 	}
 
 	public String taskEditOk() throws Exception {
-		if (setTaskEditState(taskID, false)) {
-			Session session = getDBSession();
-			Transaction tx = session.beginTransaction();
-			showMsg = true;
-			try {
-				String hql = "from TTask t where t.CId=:id";
-				Query query = session.createQuery(hql);
-				query.setString("id", taskID);
-				List<TTask> tasks = query.list();
-				if (tasks != null && tasks.size() > 0) {
+		Session session = getDBSession();
+		try {
+			if (setTaskEditState(taskID, false, session)) {
 
-					TTask task = tasks.get(0);
-					task.setCPublish(publish);
-					task.setCName(taskName);
-					task.setCVersionRegex(versionRegex);
-					session.update(task);
-					tx.commit();
-					setMsgTitle("修改成功");
+				Transaction tx = session.beginTransaction();
+				showMsg = true;
+				try {
+					String hql = "from TTask t where t.CId=:id";
+					Query query = session.createQuery(hql);
+					query.setString("id", taskID);
+					List<TTask> tasks = query.list();
+					if (tasks != null && tasks.size() > 0) {
+
+						TTask task = tasks.get(0);
+						task.setCPublish(publish);
+						task.setCName(taskName);
+						task.setCVersionRegex(versionRegex);
+						session.update(task);
+						tx.commit();
+						setMsgTitle("修改成功");
+					}
+				} catch (Exception ex) {
+					tx.rollback();
+					setMsgTitle("修改失败");
+					msgItem.clear();
+					msgItem.add(ex.getMessage());
 				}
-			} catch (Exception ex) {
-				tx.rollback();
-				setMsgTitle("修改失败");
-				msgItem.clear();
-				msgItem.add(ex.getMessage());
 			}
+		} finally {
+			session.close();
 		}
 		queryTask();
 		return "task";

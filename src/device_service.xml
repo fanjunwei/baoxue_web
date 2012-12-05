@@ -4,9 +4,12 @@
 	<package name="device_service" namespace="/device_service"
 		extends="json-default">
 		<interceptors>
+			<interceptor name="dbSession"
+				class="com.baoxue.common.DbSessionInterceptor" />
 			<interceptor-stack name="myStack">
-				<interceptor-ref name="json"></interceptor-ref>
+				<interceptor-ref name="json" />
 				<interceptor-ref name="defaultStack" />
+				<interceptor-ref name="dbSession" />
 			</interceptor-stack>
 		</interceptors>
 		<default-interceptor-ref name="myStack" />
@@ -19,7 +22,8 @@
 				<param name="inputName">result</param>
 			</result>
 		</action>
-		<action name="do_task" class="com.baoxue.action.service.Task" method="doTask">
+		<action name="do_task" class="com.baoxue.action.service.Task"
+			method="doTask">
 			<result type="stream" name="input">
 				<param name="contentType">application/json</param>
 				<param name="inputName">result</param>

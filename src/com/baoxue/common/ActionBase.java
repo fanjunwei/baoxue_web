@@ -59,16 +59,4 @@ public abstract class ActionBase extends ActionSupport {
 		return baseurl;
 	}
 
-	public List executeSQLFind(final String sql, final String[] alias,
-			final Class[] clasz) {
-
-		Session session = getDBSession();
-		SQLQuery realQuery = session.createSQLQuery(sql);
-		for (int i = 0; i < alias.length; i++) {
-			realQuery.addEntity(alias[i], clasz[i]);
-		}
-		List dataList = realQuery.list();
-		return dataList;
-
-	}
 }

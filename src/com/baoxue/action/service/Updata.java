@@ -66,33 +66,38 @@ public class Updata extends ServiceBase {
 	public String execute() {
 		Map<String, TPackageUpdate> appMaps = new HashMap<String, TPackageUpdate>();
 		Session session = getDBSession();
-		String hql = "from TPackageUpdate";
-		Query query = session.createQuery(hql);
-		List<TPackageUpdate> res = query.list();
-		for (TPackageUpdate pu : res) {
-			appMaps.put(pu.getCPackageName(), pu);
-		}
-		updatePackageNames.clear();
-		updatePackageUrls.clear();
-		forcesUpdates.clear();
-		for (int i = 0; i < packages.size(); i++) {
-			String pn = packages.get(i);
-			TPackageUpdate find = null;
-			if ((find = appMaps.get(pn)) != null) {
-				int code = versionCodes.get(i);
-				if (find.getCVersionCode() > code) {
-					updatePackageNames.add(find.getCPackageName());
-					updatePackageUrls.add(getBaseUrl() + "/apk/"
-							+ find.getCFileName());
-					forcesUpdates.add(find.isCForcesUpdate());
+		try {
+			String hql = "from TPackageUpdate";
+			Query query = session.createQuery(hql);
+			List<TPackageUpdate> res = query.list();
+			for (TPackageUpdate pu : res) {
+				appMaps.put(pu.getCPackageName(), pu);
+			}
+			updatePackageNames.clear();
+			updatePackageUrls.clear();
+			forcesUpdates.clear();
+			for (int i = 0; i < packages.size(); i++) {
+				String pn = packages.get(i);
+				TPackageUpdate find = null;
+				if ((find = appMaps.get(pn)) != null) {
+					int code = versionCodes.get(i);
+					if (find.getCVersionCode() > code) {
+						updatePackageNames.add(find.getCPackageName());
+						updatePackageUrls.add(getBaseUrl() + "/apk/"
+								+ find.getCFileName());
+						forcesUpdates.add(find.isCForcesUpdate());
+					}
 				}
 			}
-		}
 
-		for (TPackageUpdate find : res) {
-			updatePackageNames.add(find.getCPackageName());
-			updatePackageUrls.add(getBaseUrl() + "/apk/" + find.getCFileName());
-			forcesUpdates.add(find.isCForcesUpdate());
+			for (TPackageUpdate find : res) {
+				updatePackageNames.add(find.getCPackageName());
+				updatePackageUrls.add(getBaseUrl() + "/apk/"
+						+ find.getCFileName());
+				forcesUpdates.add(find.isCForcesUpdate());
+			}
+		} finally {
+			session.close();
 		}
 		return SUCCESS;
 	}

@@ -39,10 +39,14 @@ public class TaskLog extends ActionBase {
 
 	private void query() {
 		Session session = getDBSession();
-		String hql = "from TDoTaskLog l where l.CTaskId=:taskId";
-		Query query = session.createQuery(hql);
-		query.setString("taskId", taskID);
-		taskLogs = query.list();
+		try {
+			String hql = "from TDoTaskLog l where l.CTaskId=:taskId";
+			Query query = session.createQuery(hql);
+			query.setString("taskId", taskID);
+			taskLogs = query.list();
+		} finally {
+			session.close();
+		}
 	}
 
 	public String clear() {
@@ -56,6 +60,8 @@ public class TaskLog extends ActionBase {
 			tx.commit();
 		} catch (Exception ex) {
 			tx.rollback();
+		} finally {
+			session.close();
 		}
 
 		query();

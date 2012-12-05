@@ -139,29 +139,36 @@ public class UploadPackage extends ActionBase {
 				if (info != null && info.enable()) {
 					Session session = getDBSession();
 					Transaction tx = session.beginTransaction();
-					TPackageUpdate pu = new TPackageUpdate();
-					pu.setCId(UUID.randomUUID().toString());
-					pu.setCFileName(fileName);
-					pu.setCForcesUpdate(forces);
-					if (oldPackageName != null && "".equals(oldPackageName)) {
-						pu.setCOldPackageName(oldPackageName);
-					}
-					pu.setCPublish(publish);
-					pu.setCPackageName(info.getPackageName());
-					pu.setCUploadTime(new Date());
-					pu.setCVersionCode(info.getVersionCode());
-					pu.setCVersionName(info.getVersionName());
+					try {
+						TPackageUpdate pu = new TPackageUpdate();
+						pu.setCId(UUID.randomUUID().toString());
+						pu.setCFileName(fileName);
+						pu.setCForcesUpdate(forces);
+						if (oldPackageName != null && "".equals(oldPackageName)) {
+							pu.setCOldPackageName(oldPackageName);
+						}
+						pu.setCPublish(publish);
+						pu.setCPackageName(info.getPackageName());
+						pu.setCUploadTime(new Date());
+						pu.setCVersionCode(info.getVersionCode());
+						pu.setCVersionName(info.getVersionName());
 
-					session.save(pu);
-					tx.commit();
-					setShowMsg(true);
-					setMsgTitle("上传成功");
-					setId(pu.getCId());
-					setShowDelete(true);
-					msgItem.add("文件大小:" + Helper.formatLength(file.length()));
-					msgItem.add("packageName:" + info.getPackageName());
-					msgItem.add("versionCode:" + info.getVersionCode());
-					msgItem.add("versionName:" + info.getVersionName());
+						session.save(pu);
+						tx.commit();
+						setShowMsg(true);
+						setMsgTitle("上传成功");
+						setId(pu.getCId());
+						setShowDelete(true);
+						msgItem.add("文件大小:"
+								+ Helper.formatLength(file.length()));
+						msgItem.add("packageName:" + info.getPackageName());
+						msgItem.add("versionCode:" + info.getVersionCode());
+						msgItem.add("versionName:" + info.getVersionName());
+					} catch (Exception ex) {
+						tx.rollback();
+					} finally {
+						session.close();
+					}
 				} else {
 					desFile.deleteOnExit();
 					setShowMsg(true);
@@ -182,24 +189,30 @@ public class UploadPackage extends ActionBase {
 		setShowDelete(false);
 		Session session = getDBSession();
 		Transaction tx = session.beginTransaction();
-		String hql = "from TPackageUpdate p where p.CId=:id";
-		Query query = session.createQuery(hql);
-		query.setParameter("id", id);
-		@SuppressWarnings("unchecked")
-		List<TPackageUpdate> res = query.list();
-		if (res != null && res.size() > 0) {
-			String fileName = res.get(0).getCFileName();
-			String fullName = getRealPath("/apk/" + fileName);
-			File file = new File(fullName);
-			if (file.delete()) {
-				System.out.println("success delete file");
+		try {
+			String hql = "from TPackageUpdate p where p.CId=:id";
+			Query query = session.createQuery(hql);
+			query.setParameter("id", id);
+			@SuppressWarnings("unchecked")
+			List<TPackageUpdate> res = query.list();
+			if (res != null && res.size() > 0) {
+				String fileName = res.get(0).getCFileName();
+				String fullName = getRealPath("/apk/" + fileName);
+				File file = new File(fullName);
+				if (file.delete()) {
+					System.out.println("success delete file");
+				}
+				session.delete(res.get(0));
+				setMsgTitle("删除成功");
+			} else {
+				setMsgTitle("删除失败");
 			}
-			session.delete(res.get(0));
-			setMsgTitle("删除成功");
-		} else {
-			setMsgTitle("删除失败");
+			tx.commit();
+		} catch (Exception ex) {
+			tx.rollback();
+		} finally {
+			session.close();
 		}
-		tx.commit();
 
 		return SUCCESS;
 	}
