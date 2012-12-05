@@ -25,5 +25,8 @@
 	<br /><br /><br />
 	测试
 	<br/>
-	<s:a target='right' action="task" namespace="/device_service">task</s:a>
+	<s:url id="test_task" action="task" namespace="/device_service">
+	<s:param name="deviceId" value="'--ste--'"></s:param>
+	</s:url>
+	<s:a href="%{test_task}">task</s:a>
 </body>
