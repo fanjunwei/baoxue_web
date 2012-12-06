@@ -1,6 +1,6 @@
 package com.baoxue.db;
 
-// Generated 2012-12-5 10:14:47 by Hibernate Tools 3.4.0.CR1
+// Generated 2012-12-6 11:56:55 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;

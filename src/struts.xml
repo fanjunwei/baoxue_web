@@ -57,7 +57,7 @@
 			<result name="success">/WEB-INF/views/frame_home.jsp</result>
 		</action>
 		<action name="home_left" class="com.baoxue.action.Home" method="execute">
-			<result name="success">/WEB-INF/views/home.jsp</result>
+			<result name="success">/WEB-INF/views/menu.jsp</result>
 		</action>
 		<action name="weatherversion" class="com.baoxue.action.Weather"
 			method="weatherVersion">

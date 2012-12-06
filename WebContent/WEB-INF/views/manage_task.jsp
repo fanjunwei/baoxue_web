@@ -47,7 +47,7 @@
 				<s:url id="edit" action="task" method="editTask">
 					<s:param name="taskID" value="#p.CId"></s:param>
 				</s:url>
-				<s:url id="log" action="task_log" >
+				<s:url id="log" action="task_log">
 					<s:param name="taskID" value="#p.CId"></s:param>
 				</s:url>
 
@@ -63,18 +63,17 @@
 				<td><s:property value="CName" /></td>
 				<td><s:property value="CVersionRegex" /></td>
 				<td><s:property value="CCreateTime" /></td>
-				<td><span><s:property value="CPublish" /></span>
-					<s:if test="CEdit">
-					<span>，编辑中。</span>
-					</s:if>
-				</td>
-				<td><s:a href="%{del}">删除</s:a> <s:a href="%{edit}">编辑</s:a>
-				<s:a href="%{log}">日志</s:a></td>
+				<td><span><s:property value="CPublish" /></span> <s:if
+						test="CEdit">
+						<span>，编辑中。</span>
+					</s:if></td>
+				<td><s:a href="%{del}">删除</s:a> <s:a href="%{edit}">编辑</s:a> <s:a
+						href="%{log}">日志</s:a></td>
 				</tr>
 
 			</s:iterator>
 		</table>
-		<br/>
+		<br />
 		<s:if test="!editTaskView">
 			<div class="box">
 				<div class="box_title">
@@ -85,15 +84,22 @@
 						class="txt"></input>
 				</div>
 				<div class="line">
-					<span class="label">匹配表达式</span> <input type="text"
-						name="versionRegex" class="txt">
+					<span class="label">版本匹配正则表达式</span> <input
+						value="eng\.F5_BXT_01_V01" type="text" name="versionRegex"
+						class="txt">
 
 				</div>
 				<div class="line">
-					<s:checkbox name="publish"></s:checkbox>
-					<span>发布</span>
-				</div>
+					<span class="label">设备ID</span> <input type="text" name="deviceId"
+						class="txt">
 
+				</div>
+				<div class="line">
+					<input type="checkbox" name="waitResult" /> <span>等待执行结果</span>
+				</div>
+				<div class="line">
+					<input type="checkbox" name="publish" /> <span>发布</span>
+				</div>
 				<div class="bottom">
 					<s:submit method="taskAdd" value="添加" cssClass="button"></s:submit>
 				</div>
@@ -113,8 +119,16 @@
 					<s:textfield name="taskName" cssClass="txt"></s:textfield>
 				</div>
 				<div class="line">
-					<span class="label">匹配表达式</span>
+					<span class="label">版本匹配正则表达式</span>
 					<s:textfield name="versionRegex" cssClass="txt"></s:textfield>
+				</div>
+				<div class="line">
+					<span class="label">设备ID</span>
+					<s:textfield name="deviceId" cssClass="txt"></s:textfield>
+				</div>
+				<div class="line">
+					<s:checkbox name="waitResult"></s:checkbox>
+					<span>等待执行结果</span>
 				</div>
 				<div class="line">
 					<s:checkbox name="publish"></s:checkbox>
@@ -131,7 +145,6 @@
 					<s:submit method="execute" value="取消" cssClass="button"></s:submit>
 				</div>
 				<br /> <br /> <br />
-
 			</div>
 			<br />
 			<br />

@@ -13,7 +13,8 @@
 
 <body>
 
-	<s:form id="form1" action="login" method="post" enctype="multipart/form-data">
+	<s:form id="form1" action="login" method="post"
+		enctype="multipart/form-data">
 		<div style="padding: 100px 0 0 250px;">
 
 			<div id="login-box">
@@ -39,10 +40,8 @@
 						style="vertical-align: bottom; display: table-cell;"
 						src="<s:url action="imgCode" ></s:url>" />
 				</div>
-				<br /> <br /> <br /> <a
-					href="javascript:document.form1.submit();"><img
-					src="images/login-btn.png" width="103" height="42"
-					style="margin-left: 90px;" /></a>
+				<br /> <br /> <br /> <input type="image"
+					src="images/login-btn.png" style="margin-left: 90px;"></input>
 				<s:label name="msg" cssStyle="color:red;"></s:label>
 			</div>
 		</div>

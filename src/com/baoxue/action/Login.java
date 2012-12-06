@@ -118,7 +118,7 @@ public class Login extends ActionBase {
 				query.setString("user", getUserName());
 				System.out.println(getPassword());
 				String md5 = Helper.getMD5(getPassword());
-				System.out.println(md5);
+				System.out.println(getPassword()+":md5:" + md5);
 				query.setString("password", md5);
 				@SuppressWarnings("rawtypes")
 				List res = query.list();
@@ -262,5 +262,10 @@ public class Login extends ActionBase {
 
 		return null;
 
+	}
+
+	public String logout() {
+		getSession().removeAttribute("LOGIN_TYPE");
+		return LOGIN;
 	}
 }

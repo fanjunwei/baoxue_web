@@ -15,18 +15,29 @@
 	-->
 
 </head>
-<base target='right'/>
+<base target='right' />
 <body>
+	<s:a target="_top" action="login" method="logout">退出</s:a>
+	<br />
+	<!--  
+	<br />
 	<s:a target='right' action="uploadWeather">上传天气应用</s:a>
-
+	-->
 	<br />
 	<s:a target='right' action="task">任务管理</s:a>
-	
-	<br /><br /><br />
-	测试
-	<br/>
-	<s:url id="test_task" action="task" namespace="/device_service">
-	<s:param name="deviceId" value="'--ste--'"></s:param>
-	</s:url>
-	<s:a href="%{test_task}">task</s:a>
+
+	<br />
+	<br />
+	<br /> 测试
+	<br />
+	<div style="border: 1px solid #ACC3E4;">
+		测试获取Task <br />
+		<s:form action="task" namespace="/device_service">
+	设备ID
+		<input type="text" name="deviceId" />
+	设备版本
+		<input type="text" name="deviceVersion" />
+			<input type="submit" value="获取" />
+		</s:form>
+	</div>
 </body>

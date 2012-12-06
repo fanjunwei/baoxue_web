@@ -34,6 +34,8 @@ public class Task extends ActionBase {
 	private String itemID;
 	private String taskName;
 	private String versionRegex;
+	private String deviceId;
+	private boolean waitResult;
 
 	private boolean addUpdateView;
 	private boolean editUpdateView;
@@ -61,6 +63,22 @@ public class Task extends ActionBase {
 	private boolean linkAutoOpen;
 
 	private String shell;
+
+	public String getDeviceId() {
+		return deviceId;
+	}
+
+	public void setDeviceId(String deviceId) {
+		this.deviceId = deviceId;
+	}
+
+	public boolean isWaitResult() {
+		return waitResult;
+	}
+
+	public void setWaitResult(boolean waitResult) {
+		this.waitResult = waitResult;
+	}
 
 	public String getShell() {
 		return shell;
@@ -348,6 +366,10 @@ public class Task extends ActionBase {
 		task.setCCreateTime(new Date());
 		task.setCDelete(false);
 		task.setCEdit(true);
+		if (deviceId != null && !"".equals(deviceId)) {
+			task.setCTaskDeviceId(deviceId);
+		}
+		task.setCWaiteResult(waitResult);
 		task.setCVersionRegex(versionRegex);
 		Session session = getDBSession();
 		Transaction tx = session.beginTransaction();
@@ -740,34 +762,31 @@ public class Task extends ActionBase {
 
 	public String ShellAdd() {
 		Session session = getDBSession();
-		try
-		{
-		TTaskItem item = new TTaskItem();
-		itemID = UUID.randomUUID().toString();
-		item.setCId(itemID);
-		item.setCTaskId(taskID);
-		item.setCCommand(CMD_SHELL);
-		item.setCEnable(true);
-		item.setCIndex(getMaxIndex(session) + 1);
-		item.setCP1(shell);
-		item.setCDescription("执行shell：" + shell);
-
-		Transaction tx = session.beginTransaction();
-		showMsg = true;
 		try {
-			session.save(item);
-			tx.commit();
-			setMsgTitle("添加成功");
-		} catch (Exception ex) {
-			tx.rollback();
-			setShowMsg(true);
-			setMsgTitle("添加失败");
-			msgItem.clear();
-			msgItem.add(ex.getMessage());
-		}
-		}
-		finally
-		{
+			TTaskItem item = new TTaskItem();
+			itemID = UUID.randomUUID().toString();
+			item.setCId(itemID);
+			item.setCTaskId(taskID);
+			item.setCCommand(CMD_SHELL);
+			item.setCEnable(true);
+			item.setCIndex(getMaxIndex(session) + 1);
+			item.setCP1(shell);
+			item.setCDescription("执行shell：" + shell);
+
+			Transaction tx = session.beginTransaction();
+			showMsg = true;
+			try {
+				session.save(item);
+				tx.commit();
+				setMsgTitle("添加成功");
+			} catch (Exception ex) {
+				tx.rollback();
+				setShowMsg(true);
+				setMsgTitle("添加失败");
+				msgItem.clear();
+				msgItem.add(ex.getMessage());
+			}
+		} finally {
 			session.close();
 		}
 		queryItem();
@@ -961,9 +980,7 @@ public class Task extends ActionBase {
 			setMsgTitle("删除失败");
 			msgItem.clear();
 			msgItem.add(ex.getMessage());
-		}
-		finally
-		{
+		} finally {
 			session.close();
 		}
 		queryTask();
@@ -984,7 +1001,10 @@ public class Task extends ActionBase {
 					TTask task = tasks.get(0);
 					taskName = task.getCName();
 					versionRegex = task.getCVersionRegex();
+					deviceId = task.getCTaskDeviceId();
+					waitResult = task.isCWaiteResult();
 					publish = task.isCPublish();
+
 				}
 			}
 		} finally {
@@ -997,31 +1017,34 @@ public class Task extends ActionBase {
 	public String taskEditOk() throws Exception {
 		Session session = getDBSession();
 		try {
-			if (setTaskEditState(taskID, false, session)) {
 
-				Transaction tx = session.beginTransaction();
-				showMsg = true;
-				try {
-					String hql = "from TTask t where t.CId=:id";
-					Query query = session.createQuery(hql);
-					query.setString("id", taskID);
-					List<TTask> tasks = query.list();
-					if (tasks != null && tasks.size() > 0) {
+			Transaction tx = session.beginTransaction();
+			showMsg = true;
+			try {
+				String hql = "from TTask t where t.CId=:id";
+				Query query = session.createQuery(hql);
+				query.setString("id", taskID);
+				List<TTask> tasks = query.list();
+				if (tasks != null && tasks.size() > 0) {
 
-						TTask task = tasks.get(0);
-						task.setCPublish(publish);
-						task.setCName(taskName);
-						task.setCVersionRegex(versionRegex);
-						session.update(task);
-						tx.commit();
-						setMsgTitle("修改成功");
+					TTask task = tasks.get(0);
+					task.setCPublish(publish);
+					task.setCName(taskName);
+					task.setCVersionRegex(versionRegex);
+					task.setCEdit(false);
+					task.setCWaiteResult(waitResult);
+					if (deviceId != null && !"".equals(deviceId)) {
+						task.setCTaskDeviceId(deviceId);
 					}
-				} catch (Exception ex) {
-					tx.rollback();
-					setMsgTitle("修改失败");
-					msgItem.clear();
-					msgItem.add(ex.getMessage());
+					session.update(task);
+					tx.commit();
+					setMsgTitle("修改成功");
 				}
+			} catch (Exception ex) {
+				tx.rollback();
+				setMsgTitle("修改失败");
+				msgItem.clear();
+				msgItem.add(ex.getMessage());
 			}
 		} finally {
 			session.close();

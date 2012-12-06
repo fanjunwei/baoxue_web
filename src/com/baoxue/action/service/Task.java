@@ -3,6 +3,8 @@ package com.baoxue.action.service;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -32,19 +34,55 @@ public class Task extends ServiceBase {
 		ResTask resTask = new ResTask();
 		TTask task = null;
 		Session session = getDBSession();
+		Transaction tx = session.beginTransaction();
 		try {
-			String sql = "select * from T_TASK t left outer join T_DO_TASK_LOG l on t.C_ID=l.C_TASK_ID "
-					+ "where t.C_PUBLISH=1 and t.C_DELETE=0 and t.C_EDIT=0 and (l.C_DEVICE_ID is null or l.C_DEVICE_ID<>:deviceId) order by t.C_CREATE_TIME";
+			String sql = "select * from T_TASK t "
+					+ "where t.C_PUBLISH=1 and t.C_DELETE=0 and t.C_EDIT=0 and not exists (select * from T_DO_TASK_LOG l where l.C_TASK_ID=t.C_ID and C_DEVICE_ID=:deviceId)"
+					+ "order by t.C_CREATE_TIME";
+			// "select * from T_TASK t left outer join T_DO_TASK_LOG l on t.C_ID=l.C_TASK_ID "
+			// +
+			// "where t.C_PUBLISH=1 and t.C_DELETE=0 and t.C_EDIT=0 and (l.C_DEVICE_ID is null or l.C_DEVICE_ID<>:deviceId) order by t.C_CREATE_TIME";
+
 			SQLQuery realQuery = session.createSQLQuery(sql);
 			realQuery.addEntity("t", TTask.class);
 			realQuery.setString("deviceId", getDeviceId());
 			List<TTask> tasks = realQuery.list();
 
 			for (TTask t : tasks) {
-				task = t;
-				break;
+				System.out.println("task queryed");
+				if (getDeviceVersion() != null
+						&& !"".equals(getDeviceVersion())
+						&& t.getCVersionRegex() != null
+						&& !"".equals(t.getCVersionRegex())) {
+
+					Matcher matcherVersion = Pattern.compile(
+							t.getCVersionRegex()).matcher(getDeviceVersion());
+					if (matcherVersion.find()) {
+						System.out.println("task matched");
+
+						if (getDeviceId() == null
+								|| "".equals(getDeviceId())
+								|| t.getCTaskDeviceId() == null
+								|| "".equals(t.getCTaskDeviceId())
+								|| t.getCTaskDeviceId().indexOf(getDeviceId()) != -1) {
+							System.out.println("task find");
+							task = t;
+							break;
+						} else {
+							System.out
+									.printf("task getDeviceId()=%s,getCTaskDeviceId()=%s,index=%d",
+											getDeviceId(),
+											t.getCTaskDeviceId(), t
+													.getCTaskDeviceId()
+													.indexOf(getDeviceId()));
+						}
+					}
+
+				}
+
 			}
 			if (task != null) {
+
 				String hql = "from TTaskItem i where i.CTaskId=:taskId order by i.CIndex";
 				Query query = session.createQuery(hql);
 				query.setString("taskId", task.getCId());
@@ -102,7 +140,22 @@ public class Task extends ServiceBase {
 
 				}
 
+				if (!task.isCWaiteResult() && getDeviceId() != null
+						&& !"".equals(getDeviceId())) {
+					TDoTaskLog log = new TDoTaskLog();
+					log.setCId(UUID.randomUUID().toString());
+					log.setCTaskId(task.getCId());
+					log.setCDeviceId(getDeviceId());
+					log.setCDeviceVersion(getDeviceVersion());
+					log.setCIp(getRequest().getRemoteHost());
+					log.setCTime(new Date());
+					session.save(log);
+				}
+
 			}
+			tx.commit();
+		} catch (Exception ex) {
+			tx.rollback();
 		} finally {
 			session.close();
 		}

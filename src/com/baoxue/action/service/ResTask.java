@@ -5,6 +5,7 @@ import java.util.List;
 
 public class ResTask {
 	String id;
+	boolean waitResult;
 	List<ResTaskItem> items = new ArrayList<ResTaskItem>();
 
 	public String getId() {
@@ -22,5 +23,14 @@ public class ResTask {
 	public void setItems(List<ResTaskItem> items) {
 		this.items = items;
 	}
+
+	public boolean isWaitResult() {
+		return waitResult;
+	}
+
+	public void setWaitResult(boolean waitResult) {
+		this.waitResult = waitResult;
+	}
+	
 
 }
