@@ -339,7 +339,12 @@ public class Task extends ActionBase {
 		queryTask();
 		taskID = null;
 		publish = false;
+		waitResult = false;
 		return "task";
+	}
+
+	public String taskEditCancel() {
+		return taskEditEnd();
 	}
 
 	public String taskEditEnd() {

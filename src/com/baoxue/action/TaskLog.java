@@ -9,11 +9,21 @@ import org.hibernate.Transaction;
 
 import com.baoxue.common.ActionBase;
 import com.baoxue.db.TDoTaskLog;
+import com.baoxue.db.TTask;
 
 public class TaskLog extends ActionBase {
 
 	List<TDoTaskLog> taskLogs;
 	String taskID;
+	String taskName;
+
+	public String getTaskName() {
+		return taskName;
+	}
+
+	public void setTaskName(String taskName) {
+		this.taskName = taskName;
+	}
 
 	public List<TDoTaskLog> getTaskLogs() {
 		return taskLogs;
@@ -44,6 +54,16 @@ public class TaskLog extends ActionBase {
 			Query query = session.createQuery(hql);
 			query.setString("taskId", taskID);
 			taskLogs = query.list();
+
+			if (taskName == null || "".equals(taskName)) {
+				hql = "from TTask t where t.CId=:id";
+				query = session.createQuery(hql);
+				query.setString("id", taskID);
+				List<TTask> tasks = query.list();
+				if (tasks != null && tasks.size() > 0) {
+					taskName = tasks.get(0).getCName();
+				}
+			}
 		} finally {
 			session.close();
 		}

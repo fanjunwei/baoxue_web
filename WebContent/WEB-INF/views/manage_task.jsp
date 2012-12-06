@@ -142,7 +142,7 @@
 				</div>
 				<div class="bottom">
 					<s:submit method="taskEditOk" value="确定" cssClass="button"></s:submit>
-					<s:submit method="execute" value="取消" cssClass="button"></s:submit>
+					<s:submit method="taskEditCancel" value="取消" cssClass="button"></s:submit>
 				</div>
 				<br /> <br /> <br />
 			</div>
