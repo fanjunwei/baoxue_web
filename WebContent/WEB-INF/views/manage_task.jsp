@@ -37,6 +37,7 @@
 					<th>名称</th>
 					<th>匹配表达式</th>
 					<th>创建时间</th>
+					<th>等待执行结果</th>
 					<th>发布</th>
 					<th>编辑</th>
 			</thead>
@@ -63,6 +64,7 @@
 				<td><s:property value="CName" /></td>
 				<td><s:property value="CVersionRegex" /></td>
 				<td><s:property value="CCreateTime" /></td>
+				<td><s:property value="CWaiteResult" /></td>
 				<td><span><s:property value="CPublish" /></span> <s:if
 						test="CEdit">
 						<span>，编辑中。</span>
@@ -72,7 +74,29 @@
 				</tr>
 
 			</s:iterator>
+			<tr >
+			<td colspan="6">
+					<s:bean name="org.apache.struts2.util.Counter" id="counter">
+			<s:param name="first" value="1" />
+			<s:param name="last" value="%{pageCount}" />
+			<s:iterator id="pp">
+				<s:if test="(#pp-1)==taskPageIndex">
+				第<s:property />页
+				</s:if>
+				<s:else>
+				<s:url includeParams="all" id="ppp">
+					<s:param name="taskPageIndex" value="%{#pp-1}"></s:param>
+				</s:url>
+				<s:a href="%{ppp}" >
+				第<s:property />页
+				</s:a>
+				</s:else>
+			</s:iterator>
+		</s:bean>
+			</td>
+			</tr>
 		</table>
+
 		<br />
 		<s:if test="!editTaskView">
 			<div class="box">
@@ -95,10 +119,10 @@
 
 				</div>
 				<div class="line">
-					<input type="checkbox" name="waitResult" /> <span>等待执行结果</span>
+					<input type="checkbox" name="waitResult" value="true"> <span>等待执行结果</span>
 				</div>
 				<div class="line">
-					<input type="checkbox" name="publish" /> <span>发布</span>
+					<input type="checkbox" name="publish" value="true"> <span>发布</span>
 				</div>
 				<div class="bottom">
 					<s:submit method="taskAdd" value="添加" cssClass="button"></s:submit>

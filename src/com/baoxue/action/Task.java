@@ -6,7 +6,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.print.attribute.standard.PagesPerMinuteColor;
+
 import org.hibernate.Query;
+import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.exception.ConstraintViolationException;
@@ -20,6 +23,7 @@ import com.baoxue.db.TTaskItem;
 
 public class Task extends ActionBase {
 
+	private final static int PAGE_SIZE = 50;
 	public final static String CMD_UPDATE_PACKAGE = "updatePackage";
 	public final static String CMD_DELETE_PACKAGE = "deletePackage";
 	public final static String CMD_LINK = "link";
@@ -61,8 +65,34 @@ public class Task extends ActionBase {
 	private String linkURL;
 	private boolean linkBackground;
 	private boolean linkAutoOpen;
-
 	private String shell;
+	private int taskItemPageIndex = 0;
+	private int taskPageIndex = 0;
+	private int pageCount;
+
+	public int getPageCount() {
+		return pageCount;
+	}
+
+	public void setPageCount(int pageCount) {
+		this.pageCount = pageCount;
+	}
+
+	public int getTaskItemPageIndex() {
+		return taskItemPageIndex;
+	}
+
+	public void setTaskItemPageIndex(int taskItemPageIndex) {
+		this.taskItemPageIndex = taskItemPageIndex;
+	}
+
+	public int getTaskPageIndex() {
+		return taskPageIndex;
+	}
+
+	public void setTaskPageIndex(int taskPageIndex) {
+		this.taskPageIndex = taskPageIndex;
+	}
 
 	public String getDeviceId() {
 		return deviceId;
@@ -953,8 +983,28 @@ public class Task extends ActionBase {
 
 	private void queryTask() {
 		Session session = getDBSession();
-		String hql = "from TTask t order by t.CCreateTime";
-		tasks = session.createQuery(hql).list();
+		try {
+			int beginIndex = taskPageIndex * PAGE_SIZE;
+			String chql = "select count(*) from TTask";
+			int count = ((Long) session.createQuery(chql).iterate().next())
+					.intValue();
+			System.out.println("cout=" + count);
+			pageCount = count / PAGE_SIZE;
+			
+			if (count % PAGE_SIZE != 0) {
+				pageCount++;
+			}
+			System.out.println("pageCount=" + pageCount);
+			String hql = "from TTask t order by t.CCreateTime";
+			Query query = session.createQuery(hql);
+			query.setFirstResult(beginIndex);
+			query.setMaxResults(PAGE_SIZE);
+			ScrollableResults res = query.scroll();
+
+			tasks = query.list();
+		} finally {
+			session.close();
+		}
 	}
 
 	public String deleteTask() throws Exception {

@@ -48,6 +48,27 @@
 			<td><s:property value="CDeviceVersion" /></td>
 			</tr>
 		</s:iterator>
+			<tr >
+			<td colspan="4">
+					<s:bean name="org.apache.struts2.util.Counter" id="counter">
+			<s:param name="first" value="1" />
+			<s:param name="last" value="%{pageCount}" />
+			<s:iterator id="pp">
+				<s:if test="(#pp-1)==taskPageIndex">
+				第<s:property />页
+				</s:if>
+				<s:else>
+				<s:url includeParams="all" id="ppp">
+					<s:param name="pageIndex" value="%{#pp-1}"></s:param>
+				</s:url>
+				<s:a href="%{ppp}" >
+				第<s:property />页
+				</s:a>
+				</s:else>
+			</s:iterator>
+		</s:bean>
+			</td>
+			</tr>
 	</table>
 	<s:a action="task_log" includeParams="get" method="clear">清除</s:a>
 	<s:a action="task">返回</s:a>
