@@ -31,6 +31,7 @@
 				<th>时间</th>
 				<th>IP地址</th>
 				<th>版本号</th>
+				<th>结果</th>
 		</thead>
 		<s:iterator value="taskLogs" id="p" status="st">
 			<s:if test="#p.CId==itemID">
@@ -46,15 +47,16 @@
 			<td><s:property value="CTime" /></td>
 			<td><s:property value="CIp" /></td>
 			<td><s:property value="CDeviceVersion" /></td>
+			<td><s:property value="CResult" /></td>
 			</tr>
 		</s:iterator>
 			<tr >
-			<td colspan="4">
+			<td colspan="5">
 					<s:bean name="org.apache.struts2.util.Counter" id="counter">
 			<s:param name="first" value="1" />
 			<s:param name="last" value="%{pageCount}" />
 			<s:iterator id="pp">
-				<s:if test="(#pp-1)==taskPageIndex">
+				<s:if test="(#pp-1)==pageIndex">
 				第<s:property />页
 				</s:if>
 				<s:else>

@@ -1,6 +1,6 @@
 package com.baoxue.db;
 
-// Generated 2012-12-6 11:56:55 by Hibernate Tools 3.4.0.CR1
+// Generated 2012-12-7 18:49:38 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
 import javax.persistence.Column;
@@ -23,6 +23,7 @@ public class TDoTaskLog implements java.io.Serializable {
 	private Date CTime;
 	private String CIp;
 	private String CDeviceVersion;
+	private String CResult;
 
 	public TDoTaskLog() {
 	}
@@ -35,6 +36,17 @@ public class TDoTaskLog implements java.io.Serializable {
 		this.CTime = CTime;
 		this.CIp = CIp;
 		this.CDeviceVersion = CDeviceVersion;
+	}
+
+	public TDoTaskLog(String CId, String CTaskId, String CDeviceId, Date CTime,
+			String CIp, String CDeviceVersion, String CResult) {
+		this.CId = CId;
+		this.CTaskId = CTaskId;
+		this.CDeviceId = CDeviceId;
+		this.CTime = CTime;
+		this.CIp = CIp;
+		this.CDeviceVersion = CDeviceVersion;
+		this.CResult = CResult;
 	}
 
 	@Id
@@ -91,6 +103,15 @@ public class TDoTaskLog implements java.io.Serializable {
 
 	public void setCDeviceVersion(String CDeviceVersion) {
 		this.CDeviceVersion = CDeviceVersion;
+	}
+
+	@Column(name = "C_RESULT", length = 65535)
+	public String getCResult() {
+		return this.CResult;
+	}
+
+	public void setCResult(String CResult) {
+		this.CResult = CResult;
 	}
 
 }

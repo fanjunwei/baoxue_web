@@ -2,6 +2,7 @@ package com.baoxue.action.service;
 
 public class ResTaskItem {
 	private String command;
+	private String id;
 	private ResDeletePackageTaskItem deletePackageTaskItem;
 	private ResUpdataPackageTaskItem updataPackageTaskItem;
 	private ResLinkTaskItem linkTaskItem;
@@ -48,5 +49,15 @@ public class ResTaskItem {
 	public void setShellTaskItem(ResShellPackageTaskItem shellTaskItem) {
 		this.shellTaskItem = shellTaskItem;
 	}
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+	
+	
 
 }

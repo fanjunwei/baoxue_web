@@ -1,5 +1,6 @@
 package com.baoxue.action.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +12,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.baoxue.common.Zip;
 import com.baoxue.db.TDoTaskLog;
 import com.baoxue.db.TPackageUpdate;
 import com.baoxue.db.TTask;
@@ -19,6 +21,7 @@ import com.baoxue.db.TTaskItem;
 public class Task extends ServiceBase {
 
 	String taskId;
+	String resultZipBase64;
 
 	public String getTaskId() {
 		return taskId;
@@ -26,6 +29,14 @@ public class Task extends ServiceBase {
 
 	public void setTaskId(String taskId) {
 		this.taskId = taskId;
+	}
+
+	public String getResultZipBase64() {
+		return resultZipBase64;
+	}
+
+	public void setResultZipBase64(String resultZipBase64) {
+		this.resultZipBase64 = resultZipBase64;
 	}
 
 	@Override
@@ -87,10 +98,12 @@ public class Task extends ServiceBase {
 				Query query = session.createQuery(hql);
 				query.setString("taskId", task.getCId());
 				resTask.setId(task.getCId());
+				resTask.setWaitResult(task.isCWaiteResult());
 				List<TTaskItem> taskitems = query.list();
 				for (TTaskItem taskitem : taskitems) {
 					ResTaskItem ri = new ResTaskItem();
 					ri.setCommand(taskitem.getCCommand());
+					ri.setId(taskitem.getCId());
 					if (com.baoxue.action.Task.CMD_UPDATE_PACKAGE
 							.equals(taskitem.getCCommand())) {
 
@@ -179,6 +192,15 @@ public class Task extends ServiceBase {
 	}
 
 	public String doTask() {
+		String res = null;
+		if (resultZipBase64 != null && !"".equals(resultZipBase64)) {
+			try {
+				res = new String(Zip.zipBase64decompression(resultZipBase64),
+						"utf-8");
+			} catch (Exception ex) {
+				System.out.println("resultZipBase64 error" + ex.getMessage());
+			}
+		}
 		if (taskId != null && !"".equals(taskId)) {
 			Session session = getDBSession();
 			Transaction tx = session.beginTransaction();
@@ -190,6 +212,7 @@ public class Task extends ServiceBase {
 				log.setCDeviceVersion(getDeviceVersion());
 				log.setCIp(getRequest().getRemoteHost());
 				log.setCTime(new Date());
+				log.setCResult(res);
 				session.save(log);
 				tx.commit();
 
@@ -197,7 +220,6 @@ public class Task extends ServiceBase {
 				tx.rollback();
 			}
 		}
-
 		result = null;
 		return INPUT;
 	}
