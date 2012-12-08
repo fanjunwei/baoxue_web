@@ -12,6 +12,8 @@
 <meta http-equiv="description" content="This is my page">
 <link rel="stylesheet" type="text/css" href="css/box.css">
 <link rel="stylesheet" type="text/css" href="css/table.css">
+<script language="javascript" type="text/javascript"
+	src="script/helper.js"></script>
 </head>
 
 <body>
@@ -55,7 +57,7 @@
 					<s:param name="taskID" value="taskID"></s:param>
 					<s:param name="itemID" value="#p.CId"></s:param>
 				</s:url>
-				
+
 				<s:if test="#p.CId==itemID">
 					<tr class="selected">
 				</s:if>
@@ -67,7 +69,8 @@
 				</s:else>
 				<td><s:property value="CCommand" /></td>
 				<td><s:property value="CDescription" /></td>
-				<td><s:a href="%{del}">删除</s:a> <s:a href="%{edit}">编辑</s:a></td>
+				<td><s:a href="javascript:deleteConfim('%{del}')">删除</s:a> <s:a
+						href="%{edit}">编辑</s:a></td>
 				</tr>
 
 			</s:iterator>
@@ -80,12 +83,12 @@
 		<br />
 		<s:if test="showAddView">
 			<div class="box">
-			<div class="box_title" >
-				<h1>添加任务项</h1>
-			</div>
+				<div class="box_title">
+					<h1>添加任务项</h1>
+				</div>
 				<div class="line">
 					<span class="label">命令</span>
-					<s:select  list="cmdS" name="command"></s:select>
+					<s:select list="cmdS" name="command"></s:select>
 					<s:submit cssClass="button" method="addItem" value="添加"></s:submit>
 					<s:submit cssClass="button" method="taskEditEnd" value="完成"></s:submit>
 				</div>
@@ -100,9 +103,9 @@
 
 
 			<div class="box">
-			<div class="box_title">
-				<h1>添加更新</h1>
-			</div>
+				<div class="box_title">
+					<h1>添加更新</h1>
+				</div>
 				<div class="line">
 					<span class="label">选择文件</span>
 					<s:file name="file"></s:file>
@@ -126,9 +129,9 @@
 		<s:if test="editUpdateView">
 
 			<div class="box">
-			<div class="box_title">
-				<h1>修改更新</h1>
-			</div>
+				<div class="box_title">
+					<h1>修改更新</h1>
+				</div>
 				<div class="line">
 					<s:checkbox name="forcesUpdate"></s:checkbox>
 					<span>强制更新</span>
@@ -147,9 +150,9 @@
 
 		<s:if test="addDeleteView">
 			<div class="box">
-			<div class="box_title">
-				<h1>添加删除</h1>
-			</div>
+				<div class="box_title">
+					<h1>添加删除</h1>
+				</div>
 				<div class="line">
 					<span class="label">包名</span>
 					<s:textfield name="packageName" cssClass="txt"></s:textfield>
@@ -166,9 +169,9 @@
 		</s:if>
 		<s:if test="editDeleteView">
 			<div class="box">
-			<div class="box_title">
-				<h1>修改删除</h1>
-			</div>
+				<div class="box_title">
+					<h1>修改删除</h1>
+				</div>
 				<div class="line">
 					<span class="label">包名</span>
 					<s:textfield cssClass="txt" name="packageName"></s:textfield>
@@ -186,9 +189,9 @@
 
 		<s:if test="addLinkView">
 			<div class="box">
-			<div class="box_title">
-				<h1>添加连接消息推送</h1>
-			</div>
+				<div class="box_title">
+					<h1>添加连接消息推送</h1>
+				</div>
 				<div class="line">
 					<span class="label">内容</span>
 					<s:textfield name="linkMessage" cssClass="txt"></s:textfield>
@@ -217,9 +220,9 @@
 		</s:if>
 		<s:if test="editLinkView">
 			<div class="box">
-			<div class="box_title">
-				<h1>修改连接消息推送</h1>
-			</div>
+				<div class="box_title">
+					<h1>修改连接消息推送</h1>
+				</div>
 				<div class="line">
 					<span class="label">内容</span>
 					<s:textfield name="linkMessage" cssClass="txt"></s:textfield>
@@ -248,9 +251,9 @@
 		</s:if>
 		<s:if test="addShellView">
 			<div class="box">
-			<div class="box_title">
-				<h1>添加shell</h1>
-			</div>
+				<div class="box_title">
+					<h1>添加shell</h1>
+				</div>
 				<div class="line">
 					<span class="label">shell</span>
 					<s:textfield name="shell" cssClass="txt"></s:textfield>
@@ -267,15 +270,61 @@
 		</s:if>
 		<s:if test="editShellView">
 			<div class="box">
-			<div class="box_title">
-				<h1>修改shell</h1>
-			</div>
+				<div class="box_title">
+					<h1>修改shell</h1>
+				</div>
 				<div class="line">
-					<span class="label">包名</span>
+					<span class="label">shell</span>
 					<s:textfield cssClass="txt" name="shell"></s:textfield>
 				</div>
 				<div class="bottom">
 					<s:submit cssClass="button" method="ShellEdit" value="确定"></s:submit>
+					<s:submit cssClass="button" method="itemCancel" value="取消"></s:submit>
+				</div>
+				<br /> <br /> <br />
+
+			</div>
+			<br />
+			<br />
+		</s:if>
+		<s:if test="addDownloadFileView">
+
+
+			<div class="box">
+				<div class="box_title">
+					<h1>添加下载</h1>
+				</div>
+				<div class="line">
+					<span class="label">选择文件</span>
+					<s:file name="file"></s:file>
+				</div>
+				<div class="line">
+					<span class="label">目标路径</span> <input type="text" class="txt"
+						name="desPath" />
+				</div>
+				<div class="bottom">
+					<s:submit cssClass="button" method="DownloadFileAdd" value="确定"></s:submit>
+					<s:submit cssClass="button" method="itemCancel" value="取消"></s:submit>
+				</div>
+				<br /> <br /> <br />
+
+			</div>
+			<br />
+			<br />
+		</s:if>
+
+		<s:if test="editDownloadFileView">
+
+			<div class="box">
+				<div class="box_title">
+					<h1>修改下载</h1>
+				</div>
+				<div class="line">
+					<span class="label">目标路径</span>
+					<s:textfield cssClass="txt" name="desPath"></s:textfield>
+				</div>
+				<div class="bottom">
+					<s:submit cssClass="button" method="DownloadFileEdit" value="确定"></s:submit>
 					<s:submit cssClass="button" method="itemCancel" value="取消"></s:submit>
 				</div>
 				<br /> <br /> <br />

@@ -12,6 +12,7 @@
 <meta http-equiv="description" content="This is my page">
 <link rel="stylesheet" type="text/css" href="css/box.css">
 <link rel="stylesheet" type="text/css" href="css/table.css">
+<script language="javascript" type="text/javascript" src="script/helper.js"></script>
 </head>
 
 <body>
@@ -47,7 +48,7 @@
 			<td><s:property value="CTime" /></td>
 			<td><s:property value="CIp" /></td>
 			<td><s:property value="CDeviceVersion" /></td>
-			<td><s:property value="CResult" /></td>
+			<td><s:textarea readonly="true" cssStyle="width:500px;height:100px;border:none;" name="CResult"></s:textarea></td>
 			</tr>
 		</s:iterator>
 			<tr >
@@ -72,7 +73,8 @@
 			</td>
 			</tr>
 	</table>
-	<s:a action="task_log" includeParams="get" method="clear">清除</s:a>
+	<s:url action="task_log" includeParams="get" method="clear" id="del"></s:url>
+	<s:a href="javascript:deleteConfim('%{del}')">清除</s:a>
 	<s:a action="task">返回</s:a>
 	<br />
 	<br />

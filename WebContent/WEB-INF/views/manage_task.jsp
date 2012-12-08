@@ -10,6 +10,7 @@
 <meta http-equiv="description" content="This is my page">
 <link rel="stylesheet" type="text/css" href="css/box.css">
 <link rel="stylesheet" type="text/css" href="css/table.css">
+<script language="javascript" type="text/javascript" src="script/helper.js"></script>
 </head>
 
 <body>
@@ -40,6 +41,7 @@
 					<th>等待执行结果</th>
 					<th>发布</th>
 					<th>编辑</th>
+				</tr>
 			</thead>
 			<s:iterator value="tasks" id="p" status="st">
 				<s:url id="del" action="task" method="deleteTask">
@@ -69,7 +71,7 @@
 						test="CEdit">
 						<span>，编辑中。</span>
 					</s:if></td>
-				<td><s:a href="%{del}">删除</s:a> <s:a href="%{edit}">编辑</s:a> <s:a
+				<td><s:a href="javascript:deleteConfim('%{del}')">删除</s:a> <s:a href="%{edit}">编辑</s:a> <s:a
 						href="%{log}">日志</s:a></td>
 				</tr>
 

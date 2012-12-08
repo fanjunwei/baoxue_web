@@ -8,7 +8,6 @@ import java.util.Collection;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-import net.sf.json.JsonConfig;
 
 import org.apache.struts2.json.annotations.JSON;
 

@@ -1,6 +1,6 @@
 package com.baoxue.action.service;
 
-public class ResShellPackageTaskItem {
+public class ResShellTaskItem {
 	private String shell;
 
 	public String getShell() {

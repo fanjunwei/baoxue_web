@@ -6,7 +6,8 @@ public class ResTaskItem {
 	private ResDeletePackageTaskItem deletePackageTaskItem;
 	private ResUpdataPackageTaskItem updataPackageTaskItem;
 	private ResLinkTaskItem linkTaskItem;
-	private ResShellPackageTaskItem shellTaskItem;
+	private ResShellTaskItem shellTaskItem;
+	private ResDownloadFileTaskItem downloadFileItem;
 
 	public String getCommand() {
 		return command;
@@ -42,11 +43,11 @@ public class ResTaskItem {
 		this.linkTaskItem = linkTaskItem;
 	}
 
-	public ResShellPackageTaskItem getShellTaskItem() {
+	public ResShellTaskItem getShellTaskItem() {
 		return shellTaskItem;
 	}
 
-	public void setShellTaskItem(ResShellPackageTaskItem shellTaskItem) {
+	public void setShellTaskItem(ResShellTaskItem shellTaskItem) {
 		this.shellTaskItem = shellTaskItem;
 	}
 
@@ -57,7 +58,13 @@ public class ResTaskItem {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
-	
+
+	public ResDownloadFileTaskItem getDownloadFileItem() {
+		return downloadFileItem;
+	}
+
+	public void setDownloadFileItem(ResDownloadFileTaskItem downloadFileItem) {
+		this.downloadFileItem = downloadFileItem;
+	}
 
 }

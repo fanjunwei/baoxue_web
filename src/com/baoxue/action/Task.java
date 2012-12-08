@@ -6,8 +6,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import javax.print.attribute.standard.PagesPerMinuteColor;
-
 import org.hibernate.Query;
 import org.hibernate.ScrollableResults;
 import org.hibernate.Session;
@@ -28,8 +26,9 @@ public class Task extends ActionBase {
 	public final static String CMD_DELETE_PACKAGE = "deletePackage";
 	public final static String CMD_LINK = "link";
 	public final static String CMD_SHELL = "shell";
+	public final static String CMD_DOWNLOAD_FILE = "downloadFile";
 	private String[] cmdS = new String[] { CMD_UPDATE_PACKAGE,
-			CMD_DELETE_PACKAGE, CMD_LINK, CMD_SHELL };
+			CMD_DELETE_PACKAGE, CMD_LINK, CMD_SHELL, CMD_DOWNLOAD_FILE };
 	private String command;
 	private boolean showMsg;
 	private String msgTitle;
@@ -48,9 +47,12 @@ public class Task extends ActionBase {
 	private boolean editTaskView;
 	private boolean addLinkView;
 	private boolean editLinkView;
-
 	private boolean addShellView;
 	private boolean editShellView;
+
+	private boolean addDownloadFileView;
+	private boolean editDownloadFileView;
+	private String desPath;
 
 	private boolean forcesUpdate;
 
@@ -69,6 +71,30 @@ public class Task extends ActionBase {
 	private int taskItemPageIndex = 0;
 	private int taskPageIndex = 0;
 	private int pageCount;
+
+	public String getDesPath() {
+		return desPath;
+	}
+
+	public void setDesPath(String desPath) {
+		this.desPath = desPath;
+	}
+
+	public boolean isAddDownloadFileView() {
+		return addDownloadFileView;
+	}
+
+	public void setAddDownloadFileView(boolean addDownloadFileView) {
+		this.addDownloadFileView = addDownloadFileView;
+	}
+
+	public boolean isEditDownloadFileView() {
+		return editDownloadFileView;
+	}
+
+	public void setEditDownloadFileView(boolean editDownloadFileView) {
+		this.editDownloadFileView = editDownloadFileView;
+	}
 
 	public int getPageCount() {
 		return pageCount;
@@ -345,7 +371,8 @@ public class Task extends ActionBase {
 	public boolean isShowAddView() {
 		return !addUpdateView && !editUpdateView && !addDeleteView
 				&& !editDeleteView && !addLinkView && !editLinkView
-				&& !addShellView && !editShellView;
+				&& !addShellView && !editShellView && !editDownloadFileView
+				&& !addDownloadFileView;
 	}
 
 	public boolean isAddLinkView() {
@@ -480,12 +507,19 @@ public class Task extends ActionBase {
 					String fileName = res.get(0).getCFileName();
 					String fullName = getRealPath("/apk/" + fileName);
 					File file = new File(fullName);
-					if (file.delete()) {
-						System.out.println("success delete file");
+					if (file.exists()) {
+						file.delete();
 					}
 					session.delete(res.get(0));
 				}
 
+			} else if (CMD_DOWNLOAD_FILE.equals(item.getCCommand())) {
+				String fileName = item.getCP1();
+				String fullName = getRealPath("/file/" + fileName);
+				File file = new File(fullName);
+				if (file.exists()) {
+					file.delete();
+				}
 			}
 			session.delete(item);
 		}
@@ -552,6 +586,10 @@ public class Task extends ActionBase {
 
 					editShellView = true;
 					shell = item.getCP1();
+				} else if (CMD_DOWNLOAD_FILE.equals(item.getCCommand())) {
+
+					editDownloadFileView = true;
+					desPath = item.getCP2();
 				}
 
 			}
@@ -572,7 +610,10 @@ public class Task extends ActionBase {
 			addLinkView = true;
 		} else if (CMD_SHELL.equals(command)) {
 			addShellView = true;
+		} else if (CMD_DOWNLOAD_FILE.equals(command)) {
+			addDownloadFileView = true;
 		}
+
 		itemID = null;
 		queryItem();
 		return "item";
@@ -828,6 +869,79 @@ public class Task extends ActionBase {
 		return "item";
 	}
 
+	public String DownloadFileAdd() {
+		Session session = getDBSession();
+		try {
+			showMsg = true;
+			if (file == null) {
+				setMsgTitle("文件不能为空");
+			}
+			String fileName = UUID.randomUUID().toString() + ".data";
+			String fullName = getRealPath("/file/" + fileName);
+			File desFile = new File(fullName);
+			if (Helper.Copy(file, desFile)) {
+				TTaskItem item = new TTaskItem();
+				itemID = UUID.randomUUID().toString();
+				item.setCId(itemID);
+				item.setCTaskId(taskID);
+				item.setCCommand(CMD_DOWNLOAD_FILE);
+				item.setCEnable(true);
+				item.setCIndex(getMaxIndex(session) + 1);
+				item.setCP1(fileName);
+				item.setCP2(desPath);
+				item.setCP3(fileFileName);
+				item.setCDescription("下载文件到：" + desPath);
+				Transaction tx = session.beginTransaction();
+				try {
+					session.save(item);
+					tx.commit();
+					setMsgTitle("添加成功");
+				} catch (Exception ex) {
+					tx.rollback();
+					setShowMsg(true);
+					setMsgTitle("添加失败");
+					msgItem.clear();
+					msgItem.add(ex.getMessage());
+				}
+			} else {
+				setMsgTitle("添加失败");
+			}
+		} finally {
+			session.close();
+		}
+		queryItem();
+		return "item";
+	}
+
+	public String DownloadFileEdit() throws Exception {
+		Session session = getDBSession();
+		try {
+			Transaction tx = session.beginTransaction();
+			TTaskItem item = queryItemById(itemID, session);
+			showMsg = true;
+			if (item != null) {
+				try {
+					item.setCDescription("下载文件到：" + desPath);
+					item.setCP2(desPath);
+					session.update(item);
+					tx.commit();
+					setMsgTitle("修改成功");
+
+				} catch (Exception ex) {
+					tx.rollback();
+					setShowMsg(true);
+					setMsgTitle("修改失败");
+					msgItem.clear();
+					msgItem.add(ex.getMessage());
+				}
+			}
+		} finally {
+			session.close();
+		}
+		queryItem();
+		return "item";
+	}
+
 	public String DeleteEdit() throws Exception {
 		Session session = getDBSession();
 		try {
@@ -990,7 +1104,7 @@ public class Task extends ActionBase {
 					.intValue();
 			System.out.println("cout=" + count);
 			pageCount = count / PAGE_SIZE;
-			
+
 			if (count % PAGE_SIZE != 0) {
 				pageCount++;
 			}

@@ -13,8 +13,7 @@
 
 <body>
 
-	<s:form id="form1" action="login" method="post"
-		enctype="multipart/form-data">
+	<s:form id="form1" action="login" method="post">
 		<div style="padding: 100px 0 0 250px;">
 
 			<div id="login-box">

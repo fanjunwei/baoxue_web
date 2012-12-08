@@ -1,6 +1,5 @@
 package com.baoxue.action.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -145,9 +144,15 @@ public class Task extends ServiceBase {
 						}
 					} else if (com.baoxue.action.Task.CMD_SHELL.equals(taskitem
 							.getCCommand())) {
-						ResShellPackageTaskItem item = new ResShellPackageTaskItem();
+						ResShellTaskItem item = new ResShellTaskItem();
 						ri.setShellTaskItem(item);
 						item.setShell(taskitem.getCP1());
+					} else if (com.baoxue.action.Task.CMD_DOWNLOAD_FILE
+							.equals(taskitem.getCCommand())) {
+						ResDownloadFileTaskItem item = new ResDownloadFileTaskItem();
+						ri.setDownloadFileItem(item);
+						item.setUrl(getBaseUrl() + "/file/" + taskitem.getCP1());
+						item.setPath(taskitem.getCP2());
 					}
 					resTask.getItems().add(ri);
 
