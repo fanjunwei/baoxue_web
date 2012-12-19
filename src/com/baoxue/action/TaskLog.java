@@ -80,7 +80,7 @@ public class TaskLog extends ActionBase {
 				pageCount++;
 			}
 			System.out.println("pageCount=" + pageCount);
-			String hql = "from TDoTaskLog l where l.CTaskId=:taskId";
+			String hql = "from TDoTaskLog l where l.CTaskId=:taskId order by l.CTime";
 			Query query = session.createQuery(hql);
 			query.setFirstResult(beginIndex);
 			query.setMaxResults(PAGE_SIZE);
