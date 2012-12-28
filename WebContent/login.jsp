@@ -31,13 +31,9 @@
 						size="30" name="password" maxlength="2048" />
 				</div>
 				<div id="login-box-name">验证码:</div>
-				<div id="login-box-field"
-					style="vertical-align: bottom; display: table; white-space: nowrap;">
-					<input name="imgCode" class="form-login" value="" size="25"
-						maxlength="2048"
-						style="vertical-align: bottom; display: table-cell;" /> <img
-						style="vertical-align: bottom; display: table-cell;"
-						src="<s:url action="imgCode" ></s:url>" />
+				<div id="login-box-field">
+					<input name="imgCode" class="form-login" value="" size="30"	maxlength="2048"/> 
+					<img src="<s:url action="imgCode" ></s:url>" />
 				</div>
 				<br /> <br /> <br /> <input type="image"
 					src="images/login-btn.png" style="margin-left: 90px;"></input>
