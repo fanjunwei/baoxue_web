@@ -5,15 +5,11 @@ body,table {
 }
 
 table {
-	table-layout: fixed;
 	empty-cells: show;
 	border-collapse: collapse;
 	margin: 0 auto;
 }
 
-td {
-	height: 20px;
-}
 
 h1,h2,h3 {
 	font-size: 12px;

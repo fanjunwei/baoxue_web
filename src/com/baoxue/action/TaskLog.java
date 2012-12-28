@@ -1,6 +1,16 @@
 package com.baoxue.action;
 
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
+
+import net.sf.json.JSONObject;
 
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
@@ -68,6 +78,7 @@ public class TaskLog extends ActionBase {
 
 	private void query() {
 		Session session = getDBSession();
+		Transaction tx = session.beginTransaction();
 		try {
 			int beginIndex = pageIndex * PAGE_SIZE;
 			String chql = "select count(*) from TDoTaskLog l where l.CTaskId=:taskId";
@@ -87,19 +98,62 @@ public class TaskLog extends ActionBase {
 			query.setString("taskId", taskID);
 			taskLogs = query.list();
 
+			for (TDoTaskLog l : taskLogs) {
+				if (l.getCIpLocate() == null || l.getCIpLocate().equals("")) {
+					String locate = getIpLocate(l.getCIp());
+					l.setCIpLocate(locate);
+					session.update(l);
+				}
+			}
 			if (taskName == null || "".equals(taskName)) {
 				hql = "from TTask t where t.CId=:id";
 				query = session.createQuery(hql);
 				query.setString("id", taskID);
-				
+
 				List<TTask> tasks = query.list();
 				if (tasks != null && tasks.size() > 0) {
 					taskName = tasks.get(0).getCName();
 				}
 			}
 		} finally {
+			tx.commit();
 			session.close();
 		}
+	}
+
+	private String getIpLocate(String ip) {
+
+		int byteread;
+
+		try {
+			URL url = new URL(
+					"http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip="
+							+ ip);
+			URLConnection conn = url.openConnection();
+			InputStream inStream = conn.getInputStream();
+			ByteArrayOutputStream output = new ByteArrayOutputStream();
+
+			byte[] buffer = new byte[1204];
+			while ((byteread = inStream.read(buffer)) > 0) {
+				output.write(buffer, 0, byteread);
+			}
+			String res = new String(output.toByteArray(), "utf-8");
+			JSONObject json = JSONObject.fromObject(res);
+			if (json.getString("ret").equals("1")) {
+				String country = json.getString("country");
+				String province = json.getString("province");
+				String city = json.getString("city");
+				String district = json.getString("district");
+				String isp = json.getString("isp");
+
+				return country + province + city + district + isp;
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return "无";
 	}
 
 	public String clear() {

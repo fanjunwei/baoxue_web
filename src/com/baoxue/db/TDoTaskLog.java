@@ -1,9 +1,8 @@
 package com.baoxue.db;
 
-// Generated 2012-12-7 18:49:38 by Hibernate Tools 3.4.0.CR1
+// Generated 2012-12-28 16:36:08 by Hibernate Tools 3.4.0.CR1
 
 import java.util.Date;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -25,6 +24,7 @@ public class TDoTaskLog implements java.io.Serializable {
 	private String CIp;
 	private String CDeviceVersion;
 	private String CResult;
+	private String CIpLocate;
 
 	public TDoTaskLog() {
 	}
@@ -40,7 +40,7 @@ public class TDoTaskLog implements java.io.Serializable {
 	}
 
 	public TDoTaskLog(String CId, String CTaskId, String CDeviceId, Date CTime,
-			String CIp, String CDeviceVersion, String CResult) {
+			String CIp, String CDeviceVersion, String CResult, String CIpLocate) {
 		this.CId = CId;
 		this.CTaskId = CTaskId;
 		this.CDeviceId = CDeviceId;
@@ -48,6 +48,7 @@ public class TDoTaskLog implements java.io.Serializable {
 		this.CIp = CIp;
 		this.CDeviceVersion = CDeviceVersion;
 		this.CResult = CResult;
+		this.CIpLocate = CIpLocate;
 	}
 
 	@Id
@@ -113,6 +114,15 @@ public class TDoTaskLog implements java.io.Serializable {
 
 	public void setCResult(String CResult) {
 		this.CResult = CResult;
+	}
+
+	@Column(name = "C_IP_LOCATE", length = 45)
+	public String getCIpLocate() {
+		return this.CIpLocate;
+	}
+
+	public void setCIpLocate(String CIpLocate) {
+		this.CIpLocate = CIpLocate;
 	}
 
 }

@@ -46,7 +46,7 @@
 			</s:else>
 			<td><s:property value="CDeviceId" /></td>
 			<td><s:property value="CTime" /></td>
-			<td><s:property value="CIp" /></td>
+			<td><s:property value="CIp" />(<s:property value="CIpLocate" />)</td>
 			<td><s:property value="CDeviceVersion" /></td>
 			<td><s:textarea readonly="true" cssStyle="width:500px;height:100px;border:none;" name="CResult"></s:textarea></td>
 			</tr>
