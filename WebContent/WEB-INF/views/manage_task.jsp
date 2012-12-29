@@ -11,15 +11,34 @@
 <link rel="stylesheet" type="text/css" href="css/box.css">
 <link rel="stylesheet" type="text/css" href="css/table.css">
 <script language="javascript" type="text/javascript" src="script/helper.js"></script>
+<link href="css/ui-lightness/jquery-ui-1.9.2.custom.css"
+	rel="stylesheet" />
+<script src="js/jquery-1.8.3.js"></script>
+<script src="js/jquery-ui-1.9.2.custom.js"></script>
+<s:if test="!editTaskView">
+<script>
+$(function(){
+	$("#form").accordion();
+});
+</script>
+</s:if>
+<s:else>
+<script>
+$(function(){
+	$("#form").accordion({active:1});
+});
+</script>
+</s:else>
 </head>
 
 <body>
-
-	<s:form action="task" method="post">
+<div class="title">
+	<h1>任务管理</h1>
+</div>
+	<s:form id="form" action="task" method="post">
+	<h3>当前任务</h3>
+	<div>
 		<s:hidden name="taskID"></s:hidden>
-		<div class="title">
-			<h1>任务管理</h1>
-		</div>
 		<s:if test="showMsg">
 			<div class="msg">
 				<p>
@@ -98,13 +117,10 @@
 			</td>
 			</tr>
 		</table>
-
-		<br />
+	</div>
 		<s:if test="!editTaskView">
-			<div class="box">
-				<div class="box_title">
-					<h1>添加任务</h1>
-				</div>
+			<h3>添加任务</h3>
+			<div>
 				<div class="line">
 					<span class="label">任务名称</span> <input type="text" name="taskName"
 						class="txt"></input>
@@ -130,16 +146,11 @@
 					<s:submit method="taskAdd" value="添加" cssClass="button"></s:submit>
 				</div>
 				<br />
-
 			</div>
-			<br />
-			<br />
 		</s:if>
 		<s:else>
-			<div class="box">
-				<div class="box_title">
-					<h1>修改任务</h1>
-				</div>
+			<h3>修改任务</h3>
+			<div>
 				<div class="line">
 					<span class="label">任务名称</span>
 					<s:textfield name="taskName" cssClass="txt"></s:textfield>
@@ -170,10 +181,7 @@
 					<s:submit method="taskEditOk" value="确定" cssClass="button"></s:submit>
 					<s:submit method="taskEditCancel" value="取消" cssClass="button"></s:submit>
 				</div>
-				<br /> <br /> <br />
 			</div>
-			<br />
-			<br />
 		</s:else>
 	</s:form>
 
