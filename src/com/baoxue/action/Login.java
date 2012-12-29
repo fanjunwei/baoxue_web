@@ -16,6 +16,9 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
+
 import org.hibernate.Query;
 import org.hibernate.Session;
 
@@ -93,13 +96,11 @@ public class Login extends ActionBase {
 	}
 
 	public String execute() {
-		int LOGIN_TYPE = getSession().getAttribute("LOGIN_TYPE") == null ? 0
-				: (Integer) getSession().getAttribute("LOGIN_TYPE");
-		if (LOGIN_TYPE == 1) {
-			return SUCCESS;
-		}
-		if (isPost()) {
 
+		if (isPost()) {
+			LoginResult loginres = new LoginResult();
+			result = loginres;
+			loginres.setUrl(getBaseUrl()+"/home.action");
 			String save_img_code = (String) getSession().getAttribute(
 					"login_img_code");
 			getRequest().getSession().setAttribute("login_img_code", null);
@@ -107,7 +108,9 @@ public class Login extends ActionBase {
 					|| !save_img_code.toLowerCase().equals(
 							getImgCode().toLowerCase())) {
 				setMsg(Helper.getString("img_code_error"));
-				return LOGIN;
+				loginres.setSuccess(0);
+				loginres.setMessage(getMsg());
+				return "json";
 			}
 
 			Session session = HibernateSessionFactory.getSession();
@@ -118,7 +121,7 @@ public class Login extends ActionBase {
 				query.setString("user", getUserName());
 				System.out.println(getPassword());
 				String md5 = Helper.getMD5(getPassword());
-				System.out.println(getPassword()+":md5:" + md5);
+				System.out.println(getPassword() + ":md5:" + md5);
 				query.setString("password", md5);
 				@SuppressWarnings("rawtypes")
 				List res = query.list();
@@ -126,10 +129,13 @@ public class Login extends ActionBase {
 					TUsers user = (TUsers) res.get(0);
 					if (user.getAdminid() == 1) {
 						getSession().setAttribute("LOGIN_TYPE", 1);
-						return SUCCESS;
+						loginres.setSuccess(1);
+						return "json";
 					} else {
 						setMsg(Helper.getString("not_admin"));
-						return LOGIN;
+						loginres.setSuccess(0);
+						loginres.setMessage(getMsg());
+						return "json";
 					}
 
 				}
@@ -151,9 +157,20 @@ public class Login extends ActionBase {
 			// // TODO Auto-generated catch block
 			// e.printStackTrace();
 			// }
+			loginres.setSuccess(0);
+			loginres.setMessage(getMsg());
+			return "json";
+		} else {
+			int LOGIN_TYPE = getSession().getAttribute("LOGIN_TYPE") == null ? 0
+					: (Integer) getSession().getAttribute("LOGIN_TYPE");
+			if (LOGIN_TYPE == 1) {
 
+				return SUCCESS;
+			} else {
+				return INPUT;
+			}
 		}
-		return LOGIN;
+
 	}
 
 	public String imgCode() {

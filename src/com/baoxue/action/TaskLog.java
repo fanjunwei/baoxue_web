@@ -101,8 +101,10 @@ public class TaskLog extends ActionBase {
 			for (TDoTaskLog l : taskLogs) {
 				if (l.getCIpLocate() == null || l.getCIpLocate().equals("")) {
 					String locate = getIpLocate(l.getCIp());
-					l.setCIpLocate(locate);
-					session.update(l);
+					if (locate != null) {
+						l.setCIpLocate(locate);
+						session.update(l);
+					}
 				}
 			}
 			if (taskName == null || "".equals(taskName)) {
@@ -121,11 +123,19 @@ public class TaskLog extends ActionBase {
 		}
 	}
 
-	private String getIpLocate(String ip) {
-
-		int byteread;
+	private String jsonGetString(JSONObject json, String key) {
 
 		try {
+			return json.getString(key);
+		} catch (Exception ex) {
+			return null;
+		}
+	}
+
+	private String getIpLocate(String ip) {
+
+		try {
+			int byteread;
 			URL url = new URL(
 					"http://int.dpool.sina.com.cn/iplookup/iplookup.php?format=json&ip="
 							+ ip);
@@ -139,21 +149,22 @@ public class TaskLog extends ActionBase {
 			}
 			String res = new String(output.toByteArray(), "utf-8");
 			JSONObject json = JSONObject.fromObject(res);
-			if (json.getString("ret").equals("1")) {
-				String country = json.getString("country");
-				String province = json.getString("province");
-				String city = json.getString("city");
-				String district = json.getString("district");
-				String isp = json.getString("isp");
+			if ("1".equals(jsonGetString(json, "ret"))) {
+				String country = jsonGetString(json, "country");
+				String province = jsonGetString(json, "province");
+				String city = jsonGetString(json, "city");
+				String district = jsonGetString(json, "district");
+				String isp = jsonGetString(json, "isp");
 
 				return country + province + city + district + isp;
+			} else {
+				return "无";
 			}
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+			return null;
 		}
-		return "无";
+
 	}
 
 	public String clear() {

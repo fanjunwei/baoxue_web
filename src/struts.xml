@@ -42,6 +42,10 @@
 		</global-results>
 
 		<action name="login" class="com.baoxue.action.Login" method="execute">
+			<result type="stream" name="json">
+				<param name="contentType">application/json</param>
+				<param name="inputName">result</param>
+			</result>
 			<result type="redirectAction" name="success">home</result>
 			<result name="login">/login.jsp</result>
 			<result name="input">/login.jsp</result>
