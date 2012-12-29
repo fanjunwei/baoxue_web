@@ -9,16 +9,36 @@
 <title>暴雪后台登录</title>
 
 <link href="css/login-box.css" rel="stylesheet" type="text/css" />
+<link href="css/ui-lightness/jquery-ui-1.9.2.custom.css"
+	rel="stylesheet" />
+<script src="js/jquery-1.8.3.js"></script>
+<script src="js/jquery-ui-1.9.2.custom.js"></script>
+<script>
+var keysubmit = function(event){
+	if(event.which==13){
+		$("#form1").submit();
+	}
+};
+$(function()
+{
+	$("#form1").dialog({closeText: "hide",closeOnEscape: false,resizable: false,width: 510,buttons:[{text:"登录",click:function(){
+		$("#form1").submit();
+		}}]}
+	);
+	$("input").keydown(keysubmit);
+}
+);	
+</script>
 </head>
 
 <body>
 
-	<s:form id="form1" action="login" method="post">
-		<div style="padding: 100px 0 0 250px;">
+	<s:form id="form1" action="login" method="post" title="暴雪后台">
+		<div id="dialog">
 
 			<div id="login-box">
 
-				<h2>暴雪后台</h2>
+				<h2>登录</h2>
 				<br /> <br />
 				<div id="login-box-name" style="margin-top: 20px;">用户名:</div>
 				<div id="login-box-field" style="margin-top: 20px;">
@@ -32,13 +52,14 @@
 				</div>
 				<div id="login-box-name">验证码:</div>
 				<div id="login-box-field">
-					<input name="imgCode" class="form-login" value="" size="30"	maxlength="2048"/> 
-					<img src="<s:url action="imgCode" ></s:url>" />
+					<input name="imgCode" class="form-login" value="" size="30"
+						maxlength="2048" /> <img src="<s:url action="imgCode" ></s:url>" />
 				</div>
-				<br /> <br /> <br /> <input type="image"
+				<%-- <br /> <br /> <br /> <input type="image"
 					src="images/login-btn.png" style="margin-left: 90px;"></input>
-				<s:label name="msg" cssStyle="color:red;"></s:label>
+				<s:label name="msg" cssStyle="color:red;"></s:label> --%>
 			</div>
+			<s:label name="msg" cssStyle="color:red;"></s:label>
 		</div>
 	</s:form>
 
