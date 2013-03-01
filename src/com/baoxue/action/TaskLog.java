@@ -83,7 +83,7 @@ public class TaskLog extends ActionBase {
 				Session session = getDBSession();
 				Transaction tx = session.beginTransaction();
 				try {
-					String hql = "select l.CId,l.CIpLocate,l.CIp from TDoTaskLog l";
+					String hql = "select l.CId,l.CIpLocate,l.CIp from TDoTaskLog l where CIpLocate=null";
 					Query query = session.createQuery(hql).setFetchSize(1000);
 					ScrollableResults scroll = query
 							.scroll(ScrollMode.FORWARD_ONLY);
@@ -158,7 +158,7 @@ public class TaskLog extends ActionBase {
 		Session session = getDBSession();
 
 		try {
-			String chql = "select count(*) from TDoTaskLog";
+			String chql = "select count(*) from TDoTaskLog l where CIpLocate=null";
 			int total = ((Long) session.createQuery(chql).iterate().next())
 					.intValue();
 			synchronized (sessionLock) {

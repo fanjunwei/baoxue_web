@@ -31,6 +31,10 @@
 				{
 					pre=count*100/total;
 				}
+				if(total==count)
+				{
+					pre=100;
+				}
 				$("#lblTotal").text(total);
 				$("#lblCount").text(count);
 				$("#lblPre").text(pre+"%");
@@ -49,7 +53,7 @@ $(gerPre);
   <body>
   <table>
   <tr>
-  <td>总数：</td>
+  <td>要处理总数：</td>
   <td><label id="lblTotal"></label></td>
   </tr>
   <tr>
