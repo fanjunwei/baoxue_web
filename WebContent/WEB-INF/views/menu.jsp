@@ -24,7 +24,8 @@
 	<s:a target='right' action="uploadWeather">上传天气应用</s:a>
 	-->
 	<br />
-	<s:a target='right' action="task">任务管理</s:a>
+	<s:a target='right' action="task">任务管理</s:a><br/>
+	<s:a target='right' action="task_log" method="DoIpLocate">获取IP归属地</s:a>
 
 	<br />
 	<br />

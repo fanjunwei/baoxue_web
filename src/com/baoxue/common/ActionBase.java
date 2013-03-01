@@ -67,7 +67,7 @@ public abstract class ActionBase extends ActionSupport {
 								out.write(json.getBytes("utf-8"));
 							}
 						}
-					} catch (IOException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					} finally {
 						if (out != null)

@@ -94,7 +94,12 @@
 			<result name="item">/WEB-INF/views/manage_task_item.jsp</result>
 		</action>
 		<action name="task_log" class="com.baoxue.action.TaskLog">
+			<result type="stream" name="json">
+				<param name="contentType">application/json</param>
+				<param name="inputName">result</param>
+			</result>
 			<result name="success">/WEB-INF/views/task_log.jsp</result>
+			<result name="iplocate">/WEB-INF/views/doIpLocate.jsp</result>
 		</action>
 	</package>
 
