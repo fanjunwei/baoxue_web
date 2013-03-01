@@ -28,7 +28,7 @@ public class HibernateSessionFactory {
 	private static org.hibernate.SessionFactory sessionFactory;
 	private static String configFile = CONFIG_FILE_LOCATION;
 	private static ServiceRegistry serviceRegistry;
-	private static LinkedList<Session> sessions = new LinkedList<Session>();
+	//private static LinkedList<Session> sessions = new LinkedList<Session>();
 	static {
 		try {
 			configuration.configure(configFile);
@@ -60,7 +60,7 @@ public class HibernateSessionFactory {
 			}
 			session = (sessionFactory != null) ? sessionFactory.openSession()
 					: null;
-			sessions.add(session);
+			//sessions.add(session);
 			threadLocal.set(session);
 		}
 
@@ -96,15 +96,19 @@ public class HibernateSessionFactory {
 		}
 	}
 
-	public static void closeAllSession() throws HibernateException {
-
-		while (sessions.size() > 0) {
-			Session session = sessions.remove();
-			if (session != null && session.isOpen()) {
-				session.close();
-			}
-		}
-	}
+//	public static void closeAllSession() throws HibernateException {
+//
+//		try {
+//			while (sessions.size() > 0) {
+//				Session session = sessions.remove();
+//				if (session != null && session.isOpen()) {
+//					session.close();
+//				}
+//			}
+//		} catch (Exception ex) {
+//			sessions = new LinkedList<Session>();
+//		}
+//	}
 
 	/**
 	 * return session factory

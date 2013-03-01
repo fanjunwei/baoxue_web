@@ -11,7 +11,7 @@ public class DbSessionInterceptor extends AbstractInterceptor {
 	public String intercept(ActionInvocation invocation) throws Exception {
 
 		String result = invocation.invoke();
-		HibernateSessionFactory.closeAllSession();
+		//HibernateSessionFactory.closeAllSession();
 		return result;
 
 	}
